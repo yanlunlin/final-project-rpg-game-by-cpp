@@ -1,8 +1,9 @@
 #pragma once
 
-#include "player.h"
 #include <string>
 using namespace std;
+
+class Player;
 
 class Monster {
 protected:
