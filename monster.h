@@ -1,6 +1,8 @@
 #pragma once
 
+#include <map>
 #include <string>
+#include <vector>
 using namespace std;
 
 class Player;
@@ -8,14 +10,16 @@ class Player;
 class Monster {
 protected:
   string name;
-  unsigned int hp, attackPower, rewardGold;
+  unsigned int rewardGold;
+  map<string, unsigned int> proper = {
+      {"speed", 0}, {"atk", 0}, {"hp", 0}, {"lucky", 0}, {"mp", 0}};
 
 public:
   Monster();
   Monster(string name, int hp, int attackPower, int rewardGold);
   string getName() const;
-  int getHp() const;
-  int getAttackPower() const;
+  unsigned int getHp() const;
+  unsigned int getAttackPower() const;
   int getRewardGold() const;
 
   virtual void attack(Player &target) const;

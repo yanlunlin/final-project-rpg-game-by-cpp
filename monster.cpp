@@ -2,13 +2,16 @@
 #include "player.h"
 #include <iostream>
 
-Monster::Monster() : name(""), hp(0), attackPower(0), rewardGold(0) {}
+Monster::Monster() : name(""), rewardGold(0) {}
 Monster::Monster(string name, int hp, int attackPower, int rewardGold)
-    : name(name), hp(hp), attackPower(attackPower), rewardGold(rewardGold) {}
+    : name(name), rewardGold(rewardGold) {
+  proper["hp"] = hp;
+  proper["atk"] = attackPower;
+}
 
 string Monster::getName() const { return name; }
-int Monster::getHp() const { return hp; }
-int Monster::getAttackPower() const { return attackPower; }
+unsigned int Monster::getHp() const { return proper.at("hp"); }
+unsigned int Monster::getAttackPower() const { return proper.at("atk"); }
 int Monster::getRewardGold() const { return rewardGold; }
 
 void Monster::attack(Player &target) const {
