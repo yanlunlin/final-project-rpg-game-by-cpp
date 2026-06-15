@@ -2,7 +2,9 @@
 #define PLAYER_H
 
 #include<string>
-//#include"item.h"
+#include<vector>
+#include"item.h"
+#include"monster.h"
 
 using std::string;
 
@@ -11,21 +13,24 @@ class Player{
         string name;
         int hp;
         int attackPower;
-        //Item item;
+        vector<Item> item;
     public:
         Player();
+        Player(string theName, int theHp, int theAttackPower);
 
-        string getName();
-        int getHp();
-        int getAttackPower();
+        string getName() const;
+        int getHp() const;
+        int getAttackPower() const;
+        const vector<Item>& getItem() const;
 
-        void setName(string);
-        void setHp(int);
-        void setAttackPower(int);
+        void setName(string theName);
+        void setHp(int theHp);
+        void setAttackPower(int theAttackPower);
 
-        void attack();
-        void takeDamage();
-        void useItem();
+        void attack(Monster& target);
+        void takeDamage(const Monster& attacker);
+        void useItem(int index);
+
         bool isAlive();
 };
 
