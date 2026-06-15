@@ -5,9 +5,9 @@
 using namespace std;
 
 class Monster {
-private:
+protected:
   string name;
-  int hp, attackPower, rewardGold;
+  unsigned int hp, attackPower, rewardGold;
 
 public:
   Monster();
@@ -23,6 +23,10 @@ public:
   virtual void showInfo();
 };
 
-class Slime : public Monster {};
+class Slime : public Monster {
+public:
+  Slime();
+  Slime(string name, int hp, int attackPower, int rewardGold);
+};
 
 class Succubus : public Monster {};
