@@ -3,6 +3,7 @@
 #include"monster.h"
 
 using std::string;
+using std::vector;
 
 Player::Player(){}
 Player::Player(string theName, int theHp, int theAttackPower){}
@@ -19,8 +20,12 @@ int Player::getAttackPower() const{
     return attackPower;
 }
 
-const vector<Item>& Player::getItem() const{
-    return item;
+const Inventory& Player::getBackpack() const{
+    return backpack;
+}
+
+const vector<Item>& Player::getItemList() const{
+    return backpack.getStorage();
 }
 
 void Player::setName(string theName){
@@ -36,15 +41,15 @@ void Player::setAttackPower(int theAttackPower){
 }
 
 void Player::attack(Monster& target){
-    target.takeDamage(*this);
+    target.takeDamage(*this, getAttackPower());
 }
 
-void Player::takeDamage(const Monster& attacker){
-    setHp(hp - attacker.getAttackPower());
+void Player::takeDamage(const Monster& attacker, int damage){
+    setHp(hp - damage);
 }
 
-void Player::useItem(int index){
-    item[index].use();
+void Player::useItem(size_t index){
+    backpack.useItem(index);
 }
 
 bool Player::isAlive(){

@@ -14,9 +14,10 @@ private:
         return 0;
       }
     }
+    return 1;
   }
 
 public:
   bool checkEnd();
-  void fight() {}
+  bool fight();
 };
