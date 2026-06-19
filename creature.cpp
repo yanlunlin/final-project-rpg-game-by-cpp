@@ -24,7 +24,7 @@ unsigned int Creature::getHp() const { return status.at("hp"); }
 unsigned int Creature::getMp() const { return status.at("mp"); }
 unsigned int Creature::getAgi() const { return status.at("agi"); }
 unsigned int Creature::getAtk() const { return status.at("atk"); }
-unsigned int Creature::getMatk() const { return status.at("Matk"); }
+unsigned int Creature::getMatk() const { return status.at("matk"); }
 unsigned int Creature::getDef() const { return status.at("def"); }
 unsigned int Creature::getMdef() const {return status.at("mdef"); }
 unsigned int Creature::getDex() const { return status.at("dex"); }
@@ -39,6 +39,14 @@ void Creature::setDef(unsigned int def) { status["def"] = def; }
 void Creature::setMdef(unsigned int mdef) { status["mdef"] = mdef; }
 void Creature::setDex(unsigned int dex) { status["dex"] = dex; }
 void Creature::setLuk(unsigned int luk) { status["luk"] = luk; }
+
+unsigned int Creature::getAcc(const Creature& target) const{
+  return getDex()*2 + getLuk()*0.5 - target.getAgi();
+}
+
+unsigned int Creature::getCri() const{
+  return getLuk()*1.5 + getDex()*0.5;
+}
 
 void Creature::attack(Creature &target) const {
   target.takeDamage(getAtk());
