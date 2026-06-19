@@ -15,7 +15,7 @@ using std::vector;
 class Monster;
 
 class Player: public Creature{
-    private:
+    protected:
         /*map<string, unsigned int> status{
             {"hp", 0}, {"mp", 0}, {"str", 0}, {"vit", 0}, {"agi", 0}, {"dex", 0}, {"int", 0}
         };*/
@@ -32,7 +32,10 @@ class Player: public Creature{
         Inventory backpack;
     public:
         Player();
-        Player(string theName, int theHp, int theAttackPower);
+        Player(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 
         const Inventory& getBackpack() const;
         const vector<Item>& getItemList() const;
@@ -46,77 +49,110 @@ class Swordman: public Player{
     public:
         Swordman();
         Swordman(string theName);
-        Swordman(string theName, int theHp, int theAttackPower);
+        Swordman(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 };
 
 class SwordMaster: public Swordman{
     public:
         SwordMaster();
         SwordMaster(string theName);
-        SwordMaster(string theName, int theHp, int theAttackPower);
+        SwordMaster(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 };
 
 class Warrior: public Player{
     public:
         Warrior();
         Warrior(string theName);
-        Warrior(string theName, int theHp, int theAttackPower);
+        Warrior(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 };
 
 class Crusader: public Warrior{
     public:
         Crusader();
         Crusader(string theName);
-        Crusader(string theName, int theHp, int theAttackPower);
+        Crusader(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 };
 
 class Wizard: public Player{
     public:
         Wizard();
         Wizard(string theName);
-        Wizard(string theName, int theHp, int theAttackPower);
+        Wizard(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 };
 
 class ArchWizard: public Wizard{
     public:
         ArchWizard();
         ArchWizard(string theName);
-        ArchWizard(string theName, int theHp, int theAttackPower);
+        ArchWizard(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 };
 
 class Priest: public Player{
     public:
         Priest();
         Priest(string theName);
-        Priest(string theName, int theHp, int theAttackPower);
+        Priest(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 };
 
 class ArchPriest: public Priest{
     public:
         ArchPriest();
         ArchPriest(string theName);
-        ArchPriest(string theName, int theHp, int theAttackPower);
+        ArchPriest(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 };
 
 class Archer: public Player{
     public:
         Archer();
         Archer(string theName);
-        Archer(string theName, int theHp, int theAttackPower);
+        Archer(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 };
 
 class Thief: public Player{
     public:
         Thief();
         Thief(string theName);
-        Thief(string theName, int theHp, int theAttackPower);
+        Thief(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 };
 
 class Assassin: public Thief{
     public:
         Assassin();
         Assassin(string theName);
-        Assassin(string theName, int theHp, int theAttackPower);
+        Assassin(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
+            unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
+            unsigned int theDex, unsigned int theLuk
+        );
 };
 
 #endif
