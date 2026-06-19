@@ -20,7 +20,7 @@ public:
     void setQuantity(int qty);
     bool isAvailable();
     bool use();
-    void showInfo();
+    void showInfo() const;
 };
 
 #endif

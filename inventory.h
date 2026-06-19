@@ -1,5 +1,8 @@
-#include<vector>
-#include"item.h"
+#ifndef INVENTORY_H
+#define INVENTORY_H
+
+#include <vector>
+#include "item.h"
 
 using std::vector;
 
@@ -20,3 +23,5 @@ class Inventory{
 
         void useItem(size_t index);
 };
+
+#endif

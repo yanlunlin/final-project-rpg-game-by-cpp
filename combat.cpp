@@ -7,7 +7,7 @@ bool Combat::checkEnd() {
 
 bool Combat::fight() {
   if (checkEnd()) {
-    return 1;
+    return true;
   }
 }
 
