@@ -3,7 +3,7 @@
 
 #include <string>
 
-class Item {
+class item {
 private:
     std::string name;
     std::string type;
@@ -11,7 +11,7 @@ private:
     int quantity;
 
 public:
-    Item(std::string itemName, std::string itemType, int value, int qty);
+    item(std::string itemName, std::string itemType, int value, int qty);
 
     std::string getName();
     std::string getType();
