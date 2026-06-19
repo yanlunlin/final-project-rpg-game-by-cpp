@@ -4,7 +4,7 @@
 #include "item.h"
 #include <string>
 
-class Weapon : public item {
+class Weapon : public Item {
 public:
     Weapon(std::string weaponName, int atkValue, int amount);
 };

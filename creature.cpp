@@ -24,7 +24,7 @@ unsigned int Creature::getHp() const { return status.at("hp"); }
 unsigned int Creature::getMp() const { return status.at("mp"); }
 unsigned int Creature::getAgi() const { return status.at("agi"); }
 unsigned int Creature::getAtk() const { return status.at("atk"); }
-unsigned int Creature::getMatk() const { return status.at("Matk"); }
+unsigned int Creature::getMatk() const { return status.at("matk"); }
 unsigned int Creature::getDef() const { return status.at("def"); }
 unsigned int Creature::getMdef() const {return status.at("mdef"); }
 unsigned int Creature::getDex() const { return status.at("dex"); }
