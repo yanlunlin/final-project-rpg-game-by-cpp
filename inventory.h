@@ -12,6 +12,7 @@ class Inventory{
         vector<Item> storage;
     public:
         Inventory();
+        Inventory(size_t theSize);
         Inventory(size_t theSize, const vector<Item>& theStorage);
 
         size_t getMaxSize() const;

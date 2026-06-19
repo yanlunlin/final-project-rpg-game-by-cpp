@@ -13,14 +13,18 @@ protected:
 
 public:
   Monster();
-  Monster(string name, int hp, int attackPower, int rewardGold);
+  Monster(string name, unsigned int hp, unsigned int mp, unsigned int agi,
+    unsigned int atk, unsigned int matk, unsigned int def, unsigned int mdef,
+    unsigned int dex, unsigned int luk, int rewardGold);
   int getRewardGold() const;
 };
 
 class Slime : public Monster {
 public:
   Slime();
-  Slime(string name, int hp, int attackPower, int rewardGold);
+  Slime(string name, unsigned int hp, unsigned int mp, unsigned int agi,
+    unsigned int atk, unsigned int matk, unsigned int def, unsigned int mdef,
+    unsigned int dex, unsigned int luk, int rewardGold);
 };
 
 class Succubus : public Monster {};

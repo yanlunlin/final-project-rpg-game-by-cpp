@@ -40,6 +40,14 @@ void Creature::setMdef(unsigned int mdef) { status["mdef"] = mdef; }
 void Creature::setDex(unsigned int dex) { status["dex"] = dex; }
 void Creature::setLuk(unsigned int luk) { status["luk"] = luk; }
 
+unsigned int Creature::getAcc(const Creature& target) const{
+  return getDex()*2 + getLuk()*0.5 - target.getAgi();
+}
+
+unsigned int Creature::getCri() const{
+  return getLuk()*1.5 + getDex()*0.5;
+}
+
 void Creature::attack(Creature &target) const {
   target.takeDamage(getAtk());
 }

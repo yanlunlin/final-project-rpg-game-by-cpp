@@ -4,6 +4,7 @@
 using std::vector;
 
 Inventory::Inventory(): maxSize(0){}
+Inventory::Inventory(size_t theSize): maxSize(theSize){}
 Inventory::Inventory(size_t theSize, const vector<Item>& theStorage): maxSize(theSize){
     if(theStorage.size() <= maxSize){
         storage = theStorage;
