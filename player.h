@@ -27,7 +27,7 @@ class Player: public Creature{
             {"def", 0}, {"mdef", 0},
             {"dex", 0}, //dexterity 影響暴擊率及命中率, 影響命中率較多
             {"luk", 0}, //luck 影響暴擊率及命中率, 影響暴擊率較多
-        }*/
+        };*/
 
         Inventory backpack;
     public:
@@ -45,66 +45,77 @@ class Player: public Creature{
 class Swordman: public Player{
     public:
         Swordman();
+        Swordman(string theName);
         Swordman(string theName, int theHp, int theAttackPower);
 };
 
 class SwordMaster: public Swordman{
     public:
         SwordMaster();
+        SwordMaster(string theName);
         SwordMaster(string theName, int theHp, int theAttackPower);
 };
 
 class Warrior: public Player{
     public:
         Warrior();
+        Warrior(string theName);
         Warrior(string theName, int theHp, int theAttackPower);
 };
 
 class Crusader: public Warrior{
     public:
         Crusader();
+        Crusader(string theName);
         Crusader(string theName, int theHp, int theAttackPower);
 };
 
 class Wizard: public Player{
     public:
         Wizard();
+        Wizard(string theName);
         Wizard(string theName, int theHp, int theAttackPower);
 };
 
 class ArchWizard: public Wizard{
     public:
         ArchWizard();
+        ArchWizard(string theName);
         ArchWizard(string theName, int theHp, int theAttackPower);
 };
 
 class Priest: public Player{
     public:
         Priest();
+        Priest(string theName);
         Priest(string theName, int theHp, int theAttackPower);
 };
 
 class ArchPriest: public Priest{
     public:
         ArchPriest();
+        ArchPriest(string theName);
         ArchPriest(string theName, int theHp, int theAttackPower);
 };
 
 class Archer: public Player{
     public:
         Archer();
+        Archer(string theName);
         Archer(string theName, int theHp, int theAttackPower);
 };
 
 class Thief: public Player{
     public:
         Thief();
+        Thief(string theName);
         Thief(string theName, int theHp, int theAttackPower);
 };
 
 class Assassin: public Thief{
     public:
         Assassin();
+        Assassin(string theName);
         Assassin(string theName, int theHp, int theAttackPower);
 };
 
