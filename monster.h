@@ -1,5 +1,9 @@
 #pragma once
 #include "creature.h"
+#include "effect.h"
+#include "random.h"
+#include "skill.h"
+#include <future>
 #include <map>
 #include <string>
 #include <vector>
@@ -10,11 +14,13 @@ class Player;
 class Monster : public Creature {
 protected:
   unsigned int rewardGold;
+  vector<Skill> skillBook;
 
 public:
   Monster();
 
-  Monster(string name,       // name of the monster
+  Monster(string name, // name of the monster
+          vector<Skill> skillBook,
           unsigned int hp,   // health value
           unsigned int mp,   // magic value
           unsigned int agi,  // stealth
@@ -28,6 +34,19 @@ public:
 
   unsigned int getRewardGold() const;
   void setRewardGold(unsigned int rewardGold);
+};
+
+class MonsterSkill : public Skill {
+protected:
+  enum class target { player, all };
+  vector<Effect *> effect;
+  vector<target> targett;
+
+public:
+  MonsterSkill();
+  MonsterSkill(string theName, int theDamage);
+
+  void use(vector<Creature *> team) const override;
 };
 
 class Slime : public Monster {

@@ -1,6 +1,8 @@
 #pragma once
+#include "skill.h"
 #include <map>
 #include <string>
+#include <vector>
 using namespace std;
 
 struct Stat {
@@ -75,7 +77,7 @@ public:
   void addBonusFlat(const string &theStatus, unsigned int theValue);
   void addBonusPercent(const string &theStatus, unsigned int theValue);
 
-  virtual void action() {};
+  virtual void action(vector<Creature *> team, vector<Creature *> monster) {};
 
   virtual void heal(unsigned int theHp);
   virtual void attack(Creature &target) const;
