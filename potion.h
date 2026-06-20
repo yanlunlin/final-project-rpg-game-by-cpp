@@ -7,7 +7,7 @@
 class Potion : public Item {
 public:
     // statKey -> "hp", "mp", "agi", "atk"
-    Potion(std::string potionName, std::string statKey, int effectValue, int amount);
+    Potion(std::string potionName, std::string statKey, ValueType theType, int effectValue, unsigned int turns, int amount);
 };
 
 #endif

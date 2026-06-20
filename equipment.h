@@ -6,7 +6,7 @@
 
 class Equipment : public Item {
 public:
-    Equipment(std::string equipName, int defValue, int amount);
+    Equipment(std::string equipName, int defValue, ValueType theType, int amount);
 };
 
 #endif

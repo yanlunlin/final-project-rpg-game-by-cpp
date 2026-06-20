@@ -19,7 +19,7 @@ class Effect{
         Effect();
         Effect(string theName, string theTag, ValueType theType, int theValue, unsigned int theRemainingTurns);
 
-        string getNmae() const;
+        string getName() const;
         string getTag() const;
         ValueType getType() const;
         int getValue() const;

@@ -1,10 +1,13 @@
 #include<string>
+#include<iostream>
 #include"player.h"
 #include"monster.h"
 #include"inventory.h"
 
 using std::string;
 using std::vector;
+using std::cout;
+using std::endl;
 
 Player::Player(): Creature(), backpack(){}
 Player::Player(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
@@ -20,6 +23,33 @@ const vector<Item>& Player::getItemList() const{
     return backpack.getStorage();
 }
 
+void Player::addActiveEffect(const Effect& theEffect){
+    for(size_t i = 0; i < activeEffect.size(); ++i){
+        if(activeEffect[i].getName() == theEffect.getName()){
+            
+            unsigned int maxTurns = std::max(activeEffect[i].getRemainingTurns(), theEffect.getRemainingTurns());
+            activeEffect[i].setRemainingTurns(maxTurns);
+
+            return;
+        }
+    }
+
+    activeEffect.push_back(theEffect);
+}
+
+void Player::updateEffects(){
+    for(auto it = activeEffect.begin(); it != activeEffect.end(); ){
+        
+        it->execute(*this);
+
+        if(it->getRemainingTurns() == 0){
+            it = activeEffect.erase(it);
+        }else{
+            ++it;
+        }
+    }
+}
+
 /*void Player::attack(Monster& target){
     target.takeDamage(getAttackPower());
 }
@@ -28,8 +58,73 @@ void Player::takeDamage(const Monster& attacker, int damage){
     setHp(hp - damage);
 }*/
 
-void Player::useItem(size_t index){
-    backpack.useItem(index);
+void Player::useItem(size_t index) {
+    if (index >= backpack.getSize()){
+        return;
+    }
+
+    string itemType = backpack.getItem(index).getType();
+
+    if(itemType == "Potion"){
+        Item* potionPtr = backpack.usePotion(index);
+        if(potionPtr != nullptr){
+            this->addActiveEffect(potionPtr->getEffect());
+            cout << name << " 喝下了 【" << potionPtr->getName() << "】！" << endl;
+        }
+        
+        if(backpack.getItem(index).getQuantity() == 0){
+            backpack.removeItem(index);
+        }
+    }else if(itemType == "Weapon" || itemType == "Equipment"){
+        this->changeEquipment(index);
+    }
+}
+
+void Player::applyGearStats(const Item& gear, bool isEquipping) {
+    if(gear.isEmpty()){
+        return;
+    }
+
+    Effect effect = gear.getEffect();
+    int modifier = isEquipping ? 1 : -1;
+    int finalValue = effect.getValue() * modifier;
+
+    if(effect.getType() == ValueType::Flat){
+        this->addBonusFlat(effect.getTag(), finalValue);
+    }else{
+        this->addBonusPercent(effect.getTag(), finalValue);
+    }
+
+    if(!isEquipping){
+        setHp(getHp()); 
+        setMp(getMp());
+    }
+}
+
+void Player::changeEquipment(size_t index){
+    Item targetGear = backpack.getItem(index);
+    
+    if(targetGear.getType() == "Weapon"){
+        if(!equippedWeapon.isEmpty()){
+            applyGearStats(equippedWeapon, false);
+            backpack.addItem(equippedWeapon);
+        }
+        
+        equippedWeapon = targetGear;
+        equippedWeapon.setQuantity(1);
+        backpack.removeItem(index);
+        applyGearStats(equippedWeapon, true);
+    }else if(targetGear.getType() == "Equipment"){
+        if(!equippedArmor.isEmpty()){
+            applyGearStats(equippedArmor, false);
+            backpack.addItem(equippedArmor);
+        }
+        
+        equippedArmor = targetGear;
+        equippedArmor.setQuantity(1);
+        backpack.removeItem(index);
+        applyGearStats(equippedArmor, true);
+    }
 }
 
 Swordman::Swordman(): Player(){}

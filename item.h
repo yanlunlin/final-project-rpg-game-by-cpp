@@ -1,26 +1,32 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-#include <string>
+#include<string>
+#include"effect.h"
+
+using std::string;
 
 class Item {
 private:
-    std::string name;
-    std::string type;
-    int effectValue;
+    string name;
+    string type;
+    Effect effect;
     int quantity;
 
 public:
-    Item(std::string itemName, std::string itemType, int value, int qty);
+    Item(string itemName, string itemType, Effect itemEffect, int qty);
 
-    std::string getName();
-    std::string getType();
-    int getEffectValue();
-    int getQuantity();
+    string getName() const;
+    string getType() const;
+    Effect getEffect() const;
+    int getQuantity() const;
     void setQuantity(int qty);
     bool isAvailable();
+    bool isEmpty() const;
     bool use();
     void showInfo() const;
+
+    static Item CreateEmpty();
 };
 
 #endif

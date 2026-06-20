@@ -7,7 +7,7 @@ using std::string;
 Effect::Effect(): name(""), statusTag(""), valueType(ValueType::Flat), value(0), remainingTurns(0){}
 Effect::Effect(string theName, string theTag, ValueType theType, int theValue, unsigned int theRemainingTurns): name(theName), statusTag(theTag), valueType(theType), value(theValue), remainingTurns(theRemainingTurns){}
 
-string Effect::getNmae() const{
+string Effect::getName() const{
     return name;
 }
 

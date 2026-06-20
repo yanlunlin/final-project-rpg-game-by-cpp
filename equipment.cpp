@@ -1,5 +1,4 @@
 #include "equipment.h"
 
-Equipment::Equipment(std::string equipName, int defValue, int amount) 
-    : Item(equipName, "def", defValue, amount) {
-}
+Equipment::Equipment(std::string equipName, int defValue, ValueType theType, int amount)
+    : Item(equipName, "Equipment", Effect(equipName, "def", theType, defValue, 0), amount) {}
