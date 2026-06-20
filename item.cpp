@@ -1,30 +1,30 @@
 #include "item.h"
 #include <iostream>
 
-item::item(std::string itemName, std::string itemType, int value, int qty) {
+Item::Item(std::string itemName, std::string itemType, int value, int qty) {
     name = itemName;
     type = itemType;
     effectValue = value;
     quantity = qty;
 }
 
-std::string item::getName() {
+std::string Item::getName() {
     return name;
 }
 
-std::string item::getType() {
+std::string Item::getType() {
     return type;
 }
 
-int item::getEffectValue() {
+int Item::getEffectValue() {
     return effectValue;
 }
 
-int item::getQuantity() {
+int Item::getQuantity() {
     return quantity;
 }
 
-void item::setQuantity(int qty) {
+void Item::setQuantity(int qty) {
     if (qty >= 0) {
         quantity = qty;
     } else {
@@ -32,11 +32,11 @@ void item::setQuantity(int qty) {
     }
 }
 
-bool item::isAvailable() {
+bool Item::isAvailable() {
     return quantity > 0;
 }
 
-bool item::use() {
+bool Item::use() {
     if (isAvailable()) {
         quantity--;
         return true;
@@ -44,7 +44,7 @@ bool item::use() {
     return false;
 }
 
-void item::showInfo() {
+void Item::showInfo() {
     std::cout << "[" << type << "] " << name 
               << " (Effect: " << effectValue 
               << ") - Quantity: " << quantity << std::endl;
