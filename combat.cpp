@@ -8,13 +8,13 @@
 
 using namespace std;
 
-void combat(vector<Player> &team, vector<Monster> &monster) {
+void combat(vector<Creature *> &team, vector<Creature *> &monster) {
   // define
   enum class winner { nobody, team, monster };
   auto notEnd = [&]() -> winner {
     auto check = [](const auto &a) -> bool {
       for (auto i : a) {
-        if (i.isAlive()) {
+        if (i->isAlive()) {
           return 1;
         }
       }
@@ -30,10 +30,10 @@ void combat(vector<Player> &team, vector<Monster> &monster) {
   winner endd;
   vector<Creature *> action;
   for (auto i : team) {
-    action.push_back(&i);
+    action.push_back(i);
   }
   for (auto i : monster) {
-    action.push_back(&i);
+    action.push_back(i);
   }
 
   // main
@@ -41,15 +41,15 @@ void combat(vector<Player> &team, vector<Monster> &monster) {
     sort(action.begin(), action.end(),
          [](Creature *a, Creature *b) { return a->getAgi() > b->getAgi(); });
     for (auto i : action) {
-      i->action();
+      i->action(team, monster);
     }
     endd = notEnd();
   } while (endd == winner::nobody);
 
   // end
   if (endd == winner::team) {
-    for (Monster i : monster) {
-      Player::wallet += i.getRewardGold();
+    for (auto i : monster) {
+      Player::wallet += static_cast<Monster *>(i)->getRewardGold();
     }
   } else {
     cout << "GAME OVER!!!";
