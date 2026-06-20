@@ -1,13 +1,14 @@
 #include "creature.h"
 #include "monster.h"
 #include "player.h"
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-void combat(vector<Creature> &team, vector<Monster> &monster) {
+void combat(vector<Player> &team, vector<Monster> &monster) {
   // define
   enum class winner { nobody, team, monster };
   auto notEnd = [&]() -> winner {
@@ -27,11 +28,22 @@ void combat(vector<Creature> &team, vector<Monster> &monster) {
     }
   };
   winner endd;
+  vector<Creature *> action;
+  for (auto i : team) {
+    action.push_back(&i);
+  }
+  for (auto i : monster) {
+    action.push_back(&i);
+  }
 
   // main
   do {
+    sort(action.begin(), action.end(),
+         [](Creature *a, Creature *b) { return a->getAgi() > b->getAgi(); });
+    for (auto i : action) {
+      i->action();
+    }
     endd = notEnd();
-
   } while (endd == winner::nobody);
 
   // end
