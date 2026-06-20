@@ -1,16 +1,59 @@
+#include "combat.h"
+#include "effect.h"
 #include "monster.h"
+#include "player.h"
 #include "skill.h"
+#include <iostream>
 #include <vector>
 
 using namespace std;
 
 int main() {
-  Heal heal;
-  Poison poison;
+  cout << "=== 系統初始化中 ===\n";
+
+  // 1. 建立史萊姆的技能書與史萊姆本體
   vector<MonsterSkill *> slimeSkillBook = {
-      new MonsterSkill("撞擊", 1),
+      new MonsterSkill("撞擊", MonsterSkill::target::player, 1,
+                       {
+                           new Effect(),
+                       }),
+      new MonsterSkill("緩速", MonsterSkill::target::player, 0,
+                       {
+                           new Effect("緩速", "agi", ValueType::Flat, -5, 3),
+                       }),
   };
-  Monster slime("slime", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
+
+  // 🎯 這裡一定要用 new，因為你的 combat 容器是裝指標 Creature*
+  Monster *slime =
+      new Monster("史萊姆", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
+
+  // 2. 建立玩家測試機體 (這裡的參數請替換成你 Player 實際的建構子)
+  // 假設依序為：名字, HP, MP, AGI, ATK, MATK, DEF, MDEF
+  Player *hero = new Swordman("超強劍士");
+
+  // 3. 建立並配置陣營隊伍
+  vector<Creature *> player_team;
+  player_team.push_back(hero);
+
+  vector<Creature *> monster_team;
+  monster_team.push_back(slime);
+
+  // 4. 戰鬥前情提要
+  cout << "\n⚔️ 戰鬥開始！\n";
+  cout << hero->getName() << " (HP: " << hero->getHp()
+       << ", AGI: " << hero->getAgi() << ") VS ";
+  cout << slime->getName() << " (HP: " << slime->getHp()
+       << ", AGI: " << slime->getAgi() << ")\n";
+  cout << "------------------------------------\n";
+
+  // 5. 進入核心戰鬥迴圈
+  combat(player_team, monster_team);
+
+  // 6. 戰鬥結束後的驗證
+  cout << "------------------------------------\n";
+  cout << "🎉 戰鬥結束！結算畫面：\n";
+  cout << "目前玩家金幣 (Player::wallet): " << Player::wallet << " G\n";
+  cout << hero->getName() << " 剩餘 HP: " << hero->getHp() << "\n";
 }
 
 // #include <iostream>
@@ -62,7 +105,8 @@ int main() {
 //     Monster slime("Green", 60, 8, 20, 0, 0, 0, 0, 0, 0, 100);
 //     slime.showInfo();
 //     cout << "Reward gold: " << slime.getRewardGold() << endl;
-//     cout << "Slime alive? " << (slime.isAlive() ? "true" : "false") << endl;
+//     cout << "Slime alive? " << (slime.isAlive() ? "true" : "false") <<
+//     endl;
 //
 //     cout << "\n===== Battle Test =====" << endl;
 //     hero.attack(slime);
@@ -80,9 +124,9 @@ int main() {
 //     ironSword.showInfo();
 //     healingPotion.showInfo();
 //
-//     cout << "Use sword: " << (ironSword.use() ? "success" : "fail") << endl;
-//     cout << "Use potion: " << (healingPotion.use() ? "success" : "fail") <<
-//     endl;
+//     cout << "Use sword: " << (ironSword.use() ? "success" : "fail") <<
+//     endl; cout << "Use potion: " << (healingPotion.use() ? "success" :
+//     "fail") << endl;
 //
 //     cout << "After using items:" << endl;
 //     ironSword.showInfo();

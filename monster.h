@@ -30,18 +30,17 @@ public:
 };
 
 class MonsterSkill : public Skill {
-protected:
+public:
   enum class target { player, all };
-  struct EffectInstance {
-    Effect *effectPtr;
-    target targetType;
-  };
 
-  vector<EffectInstance> effects;
+private:
+  vector<Effect *> effects;
+  target skillTarget;
 
 public:
   MonsterSkill();
-  MonsterSkill(string theName, int theDamageCross);
+  MonsterSkill(string theName, target tgt, int theDamageCross,
+               vector<Effect *> eff);
 
   void addEffect(Effect *eff, target tgt);
   void use(vector<Creature *> team, Creature *user) const;

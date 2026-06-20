@@ -38,6 +38,12 @@ void combat(vector<Creature *> &team, vector<Creature *> &monster) {
 
   // main
   do {
+    for (auto i : team) {
+      cout << i->getName() << " Hp: " << i->getHp() << endl;
+    }
+    for (auto i : monster) {
+      cout << i->getName() << " Hp: " << i->getHp() << endl;
+    }
     sort(action.begin(), action.end(),
          [](Creature *a, Creature *b) { return a->getAgi() > b->getAgi(); });
     for (auto i : action) {

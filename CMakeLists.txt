@@ -8,11 +8,8 @@ project(FantasyRPG LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 4. 告訴 CMake 標頭檔（.h）藏在 include 資料夾裡
-include_directories(include)
+# 4. 自動把「當前目錄」下所有的 .cpp 檔案打包成 SRC_FILES 變數
+file(GLOB SRC_FILES "*.cpp")
 
-# 5. 自動把 src 資料夾裡面所有的 .cpp 檔案打包成一個變數，不用手動逐一寫名字
-file(GLOB_RECURSE SRC_FILES "src/*.cpp")
-
-# 6. 定義最終產生的執行檔名稱（叫做 Game），並指定要把 main.cpp 和所有 src 底下的 cpp 一起編譯進去
-add_executable(Game main.cpp ${SRC_FILES})
+# 5. 定義最終產生的執行檔名稱（叫做 Game），並把抓到的所有 cpp 編譯進去
+add_executable(Game ${SRC_FILES})
