@@ -44,7 +44,7 @@ int main() {
     cout << "Hero alive? " << (hero.isAlive() ? "true" : "false") << endl;
 
     cout << "\n===== Monster Test =====" << endl;
-    Monster slime("Green", 60, 8, 20);
+    Monster slime("Green", 60, 8, 20, 0, 0, 0, 0, 0, 0, 100);
     slime.showInfo();
     cout << "Reward gold: " << slime.getRewardGold() << endl;
     cout << "Slime alive? " << (slime.isAlive() ? "true" : "false") << endl;
