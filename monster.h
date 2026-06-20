@@ -10,51 +10,40 @@
 using namespace std;
 
 class Player;
+class MonsterSkill;
 
 class Monster : public Creature {
 protected:
   unsigned int rewardGold;
-  vector<Skill> skillBook;
+  vector<MonsterSkill *> skillBook;
 
 public:
   Monster();
-
-  Monster(string name, // name of the monster
-          vector<Skill> skillBook,
-          unsigned int hp,   // health value
-          unsigned int mp,   // magic value
-          unsigned int agi,  // stealth
-          unsigned int atk,  // attack value
-          unsigned int matk, // magic attcak value
-          unsigned int def,  // defence value
-          unsigned int mdef, // magic defence value
-          unsigned int dex,  // dexterity
-          unsigned int luk,  // lucky
-          int rewardGold);   // gold drops when killed
+  Monster(string name, vector<MonsterSkill *> skillBook, unsigned int hp,
+          unsigned int agi, unsigned int atk, unsigned int matk,
+          unsigned int def, unsigned int mdef, int rewardGold);
 
   unsigned int getRewardGold() const;
   void setRewardGold(unsigned int rewardGold);
+
+  void action(vector<Creature *> team, vector<Creature *> monster) override;
 };
 
 class MonsterSkill : public Skill {
 protected:
   enum class target { player, all };
-  vector<Effect *> effect;
-  vector<target> targett;
+  struct EffectInstance {
+    Effect *effectPtr;
+    target targetType;
+  };
+
+  vector<EffectInstance> effects;
 
 public:
   MonsterSkill();
-  MonsterSkill(string theName, int theDamage);
+  MonsterSkill(string theName, int theDamageCross);
 
-  void use(vector<Creature *> team) const override;
+  void addEffect(Effect *eff, target tgt);
+  void use(vector<Creature *> team, Creature *user) const;
+  MonsterSkill &attach(Effect *eff, target tgt);
 };
-
-class Slime : public Monster {
-public:
-  Slime();
-  Slime(string name, unsigned int hp, unsigned int mp, unsigned int agi,
-        unsigned int atk, unsigned int matk, unsigned int def,
-        unsigned int mdef, unsigned int dex, unsigned int luk, int rewardGold);
-};
-
-class Succubus : public Monster {};
