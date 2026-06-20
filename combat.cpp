@@ -1,13 +1,47 @@
-#include "combat.h"
+#include "creature.h"
+#include "monster.h"
+#include "player.h"
+#include <cstdlib>
+#include <iostream>
 #include <vector>
 
-bool Combat::checkEnd() {
-  return checkAnyoneAlive(player) && checkAnyoneAlive(monster);
-}
+using namespace std;
 
-bool Combat::fight() {
-  if (checkEnd()) {
-    return true;
+void combat(vector<Creature> &team, vector<Monster> &monster) {
+  // define
+  enum class winner { nobody, team, monster };
+  auto notEnd = [&]() -> winner {
+    auto check = [](const auto &a) -> bool {
+      for (auto i : a) {
+        if (i.isAlive()) {
+          return 1;
+        }
+      }
+      return 0;
+    };
+    bool x = check(team), y = check(monster);
+    if (x && y) {
+      return winner::nobody;
+    } else {
+      return x ? winner::team : winner::monster;
+    }
+  };
+  winner endd;
+
+  // main
+  do {
+    endd = notEnd();
+
+  } while (endd == winner::nobody);
+
+  // end
+  if (endd == winner::team) {
+    for (Monster i : monster) {
+      Player::wallet += i.getRewardGold();
+    }
+  } else {
+    cout << "GAME OVER!!!";
+    exit(0);
   }
 }
 
