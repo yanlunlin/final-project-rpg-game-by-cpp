@@ -1,3 +1,6 @@
+#ifndef EFFECT_H
+#define EFFECT_H
+
 #include<string>
 #include"creature.h"
 
@@ -45,3 +48,5 @@ class Poison: public Effect{
         Poison();
         Poison(ValueType theType, int theValue, unsigned int theRemainingTurns);
 };
+
+#endif
