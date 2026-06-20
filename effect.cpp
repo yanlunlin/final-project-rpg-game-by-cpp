@@ -91,8 +91,8 @@ void Effect::execute(Creature& target){
     }
 }
 
-Heal::Heal(): Effect("heal", "hp", ValueType::Flat, 0, 0){}
+/*Heal::Heal(): Effect("heal", "hp", ValueType::Flat, 0, 0){}
 Heal::Heal(ValueType theType, int theValue, unsigned int theRemainingTurns): Effect("heal", "hp", theType, theValue, theRemainingTurns){}
 
 Poison::Poison(): Effect("poison", "hp", ValueType::Flat, 0, 0){}
-Poison::Poison(ValueType theType, int theValue, unsigned int theRemainingTurns): Effect("poison", "hp", theType, theValue, theRemainingTurns){}
+Poison::Poison(ValueType theType, int theValue, unsigned int theRemainingTurns): Effect("poison", "hp", theType, theValue, theRemainingTurns){}*/

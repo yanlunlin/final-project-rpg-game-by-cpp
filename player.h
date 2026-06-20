@@ -17,11 +17,6 @@ class Monster;
 class Player : public Creature {
     private:
         /*map<string, unsigned int> status{
-            {"hp", 0}, {"mp", 0}, {"str", 0}, {"vit", 0}, {"agi", 0}, {"dex", 0},
-        {"int", 0}
-        };*/
-
-        /*map<string, unsigned int> status{
             {"hp", 0}, {"mp", 0},
             {"agi", 0}, //agility 敏捷
             {"atk", 0}, {"matk", 0},
@@ -37,7 +32,7 @@ class Player : public Creature {
         vector<Skill> skillBook;
 
         void applyGearStats(const Item& gear, bool isEquipping);
-        void changeEquipment(size_t backpackIndex); 
+        void changeEquipment(size_t backpackIndex);
     public:
         inline static unsigned int wallet = 0;
 

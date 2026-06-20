@@ -37,7 +37,7 @@ class Effect{
         void execute(Creature& target);
 };
 
-class Heal: public Effect{
+/*class Heal: public Effect{
     public:
         Heal();
         Heal(ValueType theType, int theValue, unsigned int theRemainingTurns);
@@ -47,6 +47,6 @@ class Poison: public Effect{
     public:
         Poison();
         Poison(ValueType theType, int theValue, unsigned int theRemainingTurns);
-};
+};*/
 
 #endif

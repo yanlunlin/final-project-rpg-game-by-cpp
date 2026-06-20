@@ -16,6 +16,8 @@ private:
 public:
     Item(string itemName, string itemType, Effect itemEffect, int qty);
 
+    static Item CreateEmpty();
+
     string getName() const;
     string getType() const;
     Effect getEffect() const;
@@ -25,8 +27,6 @@ public:
     bool isEmpty() const;
     bool use();
     void showInfo() const;
-
-    static Item CreateEmpty();
 };
 
 #endif

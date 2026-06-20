@@ -3,6 +3,10 @@
 
 Item::Item(std::string itemName, std::string itemType, Effect itemEffect, int qty): name(itemName), type(itemType), effect(itemEffect), quantity(qty){}
 
+Item Item::CreateEmpty(){ 
+    return Item("", "None", Effect("", "", ValueType::Flat, 0, 0), 0); 
+}
+
 std::string Item::getName() const{
     return name;
 }
@@ -47,8 +51,4 @@ void Item::showInfo() const {
     std::cout << "[" << type << "] " << name 
               << " (Effect: " << effect.getName() 
               << ") - Quantity: " << quantity << std::endl;
-}
-
-Item Item::CreateEmpty(){ 
-    return Item("", "None", Effect("", "", ValueType::Flat, 0, 0), 0); 
 }
