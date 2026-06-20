@@ -44,7 +44,7 @@ bool Item::use() {
     return false;
 }
 
-void Item::showInfo() {
+void Item::showInfo() const {
     std::cout << "[" << type << "] " << name 
               << " (Effect: " << effectValue 
               << ") - Quantity: " << quantity << std::endl;

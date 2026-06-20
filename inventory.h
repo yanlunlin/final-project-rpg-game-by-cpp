@@ -1,5 +1,8 @@
-#include<vector>
-#include"item.h"
+#ifndef INVENTORY_H
+#define INVENTORY_H
+
+#include <vector>
+#include "item.h"
 
 using std::vector;
 
@@ -9,6 +12,7 @@ class Inventory{
         vector<Item> storage;
     public:
         Inventory();
+        Inventory(size_t theSize);
         Inventory(size_t theSize, const vector<Item>& theStorage);
 
         size_t getMaxSize() const;
@@ -19,3 +23,5 @@ class Inventory{
 
         void useItem(size_t index);
 };
+
+#endif

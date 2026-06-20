@@ -2,20 +2,20 @@
 #define PLAYER_H
 
 #include<string>
-#include<map>
 #include<vector>
 #include"creature.h"
 #include"inventory.h"
 #include"item.h"
+#include"effect.h"
+#include"skill.h"
 
 using std::string;
-using std::map;
 using std::vector;
 
 class Monster;
 
 class Player: public Creature{
-    protected:
+    private:
         /*map<string, unsigned int> status{
             {"hp", 0}, {"mp", 0}, {"str", 0}, {"vit", 0}, {"agi", 0}, {"dex", 0}, {"int", 0}
         };*/
@@ -30,6 +30,8 @@ class Player: public Creature{
         };*/
 
         Inventory backpack;
+        vector<Effect> activeEffect;
+        vector<Skill> skillBook;
     public:
         Player();
         Player(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
