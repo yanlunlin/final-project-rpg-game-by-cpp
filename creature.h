@@ -62,12 +62,19 @@ public:
   void setDex(unsigned int dex);
   void setLuk(unsigned int luk);
 
+  unsigned int getStatBase(const string& theStatus) const;
+
   unsigned int getAcc(const Creature& target) const; //Accuracy 命中率
   unsigned int getCri() const; //Critical 暴擊率
+
+  void addBonusFlat(const string& theStatus, unsigned int theValue);
+  void addBonusPercent(const string& theStatus, unsigned int theValue);
 
   virtual void heal(unsigned int theHp);
   virtual void attack(Creature &target) const;
   virtual void takeDamage(int damage);
+  virtual void healMp(unsigned int theMp);
+  virtual void loseMp(unsigned int theMp);
   bool isAlive();
   virtual void showInfo();
 };

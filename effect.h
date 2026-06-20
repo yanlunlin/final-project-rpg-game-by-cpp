@@ -11,19 +11,22 @@ enum class ValueType{
 class Effect{
     protected:
         string name;
+        string statusTag;
         ValueType valueType;
         int value;
         unsigned int remainingTurns;
     public:
         Effect();
-        Effect(string theName, ValueType theType, int theValue, unsigned int theRemainingTurns);
+        Effect(string theName, string theTag, ValueType theType, int theValue, unsigned int theRemainingTurns);
 
         string getNmae() const;
+        string getTag() const;
         ValueType getType() const;
         int getValue() const;
         unsigned int getRemainingTurns() const;
 
         void setName(string theName);
+        void setTag(string theTag);
         void setType(ValueType theType);
         void setValue(int theValue);
         void setRemainingTurns(unsigned int theRemainingTurns);

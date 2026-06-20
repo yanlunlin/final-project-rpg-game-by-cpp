@@ -52,12 +52,31 @@ void Creature::setMdef(unsigned int mdef) { status["mdef"].base = mdef; }
 void Creature::setDex(unsigned int dex) { status["dex"].base = dex; }
 void Creature::setLuk(unsigned int luk) { status["luk"].base = luk; }
 
+unsigned int Creature::getStatBase(const string& theStatus) const{
+  if (status.count(theStatus)) {
+    return status.at(theStatus).base;
+  }
+  return 0;
+}
+
 unsigned int Creature::getAcc(const Creature& target) const{
   return getDex()*2 + getLuk()*0.5 - target.getAgi();
 }
 
 unsigned int Creature::getCri() const{
   return getLuk()*1.5 + getDex()*0.5;
+}
+
+void Creature::addBonusFlat(const string& theStatus, unsigned int theValue){
+  if(status.count(theStatus)){
+    status[theStatus].base += theValue;
+  }
+}
+
+void Creature::addBonusPercent(const string& theStatus, unsigned int theValue){
+  if(status.count(theStatus)){
+    status[theStatus].base += theValue;
+  }
 }
 
 void Creature::heal(unsigned int theHp){
@@ -74,6 +93,16 @@ void Creature::takeDamage(int damage) {
     setHp(getHp() - damage);
   }
 }
+
+void Creature::healMp(unsigned int theMp){
+  setMp(getMp() + theMp);
+}
+
+void Creature::loseMp(unsigned int theMp){
+  unsigned int currentMp = getMp();
+  setMp((currentMp > theMp) ? currentMp-theMp : 0);
+}
+
 bool Creature::isAlive() { return getHp(); }
 void Creature::showInfo() {
   cout << getName() << endl << "|-hp: " << getHp() << endl;
