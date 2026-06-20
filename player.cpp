@@ -58,8 +58,8 @@ void Player::takeDamage(const Monster& attacker, int damage){
     setHp(hp - damage);
 }*/
 
-void Player::useItem(size_t index) {
-    if (index >= backpack.getSize()){
+void Player::useItem(size_t index){
+    if(index >= backpack.getSize()){
         return;
     }
 
@@ -80,7 +80,7 @@ void Player::useItem(size_t index) {
     }
 }
 
-void Player::applyGearStats(const Item& gear, bool isEquipping) {
+void Player::applyGearStats(const Item& gear, bool isEquipping){
     if(gear.isEmpty()){
         return;
     }

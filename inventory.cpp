@@ -47,8 +47,8 @@ void Inventory::addItem(const Item& theItem){
 
     int incomingQty = theItem.getQuantity();
 
-    for (auto& slot : storage) {
-        if (slot.getName() == theItem.getName()) {
+    for(auto& slot : storage){
+        if(slot.getName() == theItem.getName()){
             slot.setQuantity(slot.getQuantity() + incomingQty);
             return;
         }
@@ -59,7 +59,7 @@ void Inventory::addItem(const Item& theItem){
     storage.push_back(copy);
 }
 
-void Inventory::removeItem(size_t index) {
+void Inventory::removeItem(size_t index){
     if(index >= storage.size()){
         return;
     }
@@ -72,7 +72,7 @@ void Inventory::removeItem(size_t index) {
     }
 }
 
-Item* Inventory::usePotion(size_t index) {
+Item* Inventory::usePotion(size_t index){
     if(index >= storage.size() || storage[index].getQuantity() == 0){
         return nullptr;
     }
