@@ -46,5 +46,6 @@ Slime::Slime(string name, unsigned int hp, unsigned int mp, unsigned int agi,
              unsigned int atk, unsigned int matk, unsigned int def,
              unsigned int mdef, unsigned int dex, unsigned int luk,
              int rewardGold)
-    : Monster(name + " Slime", hp, mp, agi, atk, matk, def, mdef, dex, luk,
+    : Monster(name + " Slime", {Skill("撞擊", 30, 0), Skill(), Skill(), Skill()},
+              hp, mp, agi, atk, matk, def, mdef, dex, luk,
               rewardGold) {}
