@@ -3,14 +3,14 @@
 #include <string>
 using namespace std;
 
-struct Stat{
-  unsigned int base;//基礎值
-  int bonusFlat;    //固定值加成
-  int bonusPercent; //百分比加成
+struct Stat {
+  unsigned int base; // 基礎值
+  int bonusFlat;     // 固定值加成
+  int bonusPercent;  // 百分比加成
 
-  unsigned int getFinalValue() const{
+  unsigned int getFinalValue() const {
     int rawFinal = static_cast<int>(base) + bonusFlat;
-    if (rawFinal < 0){
+    if (rawFinal < 0) {
       rawFinal = 0;
     }
 
@@ -23,20 +23,25 @@ class Creature {
 protected:
   string name;
   map<string, Stat> status = {
-    {"maxHp", {0, 0, 0}}, {"hp", {0, 0, 0}},
-    {"maxMp", {0, 0, 0}}, {"mp", {0, 0, 0}},
-    {"agi", {0, 0, 0}}, //agility 敏捷
-    {"atk", {0, 0, 0}}, {"matk", {0, 0, 0}},
-    {"def", {0, 0, 0}}, {"mdef", {0, 0, 0}},
-    {"dex", {0, 0, 0}}, //dexterity 影響暴擊率及命中率, 影響命中率較多
-    {"luk", {0, 0, 0}}, //luck 影響暴擊率及命中率, 影響暴擊率較多
+      {"maxHp", {0, 0, 0}},
+      {"hp", {0, 0, 0}},
+      {"maxMp", {0, 0, 0}},
+      {"mp", {0, 0, 0}},
+      {"agi", {0, 0, 0}}, // agility 敏捷
+      {"atk", {0, 0, 0}},
+      {"matk", {0, 0, 0}},
+      {"def", {0, 0, 0}},
+      {"mdef", {0, 0, 0}},
+      {"dex", {0, 0, 0}}, // dexterity 影響暴擊率及命中率,
+                          // 影響命中率較多
+      {"luk", {0, 0, 0}}, // luck 影響暴擊率及命中率, 影響暴擊率較多
   };
 
 public:
   Creature();
   Creature(string name, unsigned int hp, unsigned int mp, unsigned int agi,
-    unsigned int atk, unsigned int matk, unsigned int def, unsigned int mdef,
-    unsigned int dex, unsigned int luk);
+           unsigned int atk, unsigned int matk, unsigned int def,
+           unsigned int mdef, unsigned int dex, unsigned int luk);
   string getName() const;
   unsigned int getMaxHp() const;
   unsigned int getHp() const;
@@ -62,13 +67,15 @@ public:
   void setDex(unsigned int dex);
   void setLuk(unsigned int luk);
 
-  unsigned int getStatBase(const string& theStatus) const;
+  unsigned int getStatBase(const string &theStatus) const;
 
-  unsigned int getAcc(const Creature& target) const; //Accuracy 命中率
-  unsigned int getCri() const; //Critical 暴擊率
+  unsigned int getAcc(const Creature &target) const; // Accuracy 命中率
+  unsigned int getCri() const;                       // Critical 暴擊率
 
-  void addBonusFlat(const string& theStatus, unsigned int theValue);
-  void addBonusPercent(const string& theStatus, unsigned int theValue);
+  void addBonusFlat(const string &theStatus, unsigned int theValue);
+  void addBonusPercent(const string &theStatus, unsigned int theValue);
+
+  virtual void action() {};
 
   virtual void heal(unsigned int theHp);
   virtual void attack(Creature &target) const;
