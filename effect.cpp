@@ -1,8 +1,10 @@
 #include<string>
+#include<iostream>
 #include"effect.h"
 #include"creature.h"
 
 using std::string;
+using std::cout;
 
 Effect::Effect(): name(""), statusTag(""), valueType(ValueType::Flat), value(0), remainingTurns(0){}
 Effect::Effect(string theName, string theTag, ValueType theType, int theValue, unsigned int theRemainingTurns): name(theName), statusTag(theTag), valueType(theType), value(theValue), remainingTurns(theRemainingTurns){}
@@ -67,6 +69,8 @@ void Effect::execute(Creature& target) const{
             finalValue = static_cast<int>(baseValue*(value/100.0));
         }
 
+        unsigned int oldValue = target.getStatTotal(statusTag);
+
         if(statusTag == "hp"){
             if(value >= 0){
                 target.heal(static_cast<unsigned int>(finalValue));
@@ -86,6 +90,8 @@ void Effect::execute(Creature& target) const{
                 target.addBonusPercent(statusTag, value);
             }
         }
+
+        cout << "[" << this->getName() << "] 發動 (" << statusTag << ": " << oldValue << "->" << target.getStatTotal(statusTag) << ")\n";
 
         //remainingTurns--;
     }

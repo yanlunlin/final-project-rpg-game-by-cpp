@@ -16,7 +16,7 @@ Player::Player(string theName, unsigned int theHp, unsigned int theMp, unsigned 
     unsigned int theDex, unsigned int theLuk
 ): Creature(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk), backpack(20){
     skillBook = {
-        PlayerSkill("普通攻擊", PlayerSkill::TargetType::SingleEnemy, PlayerSkill::DamageType::Magical, {}, 1, 0)
+        PlayerSkill("普通攻擊", PlayerSkill::TargetType::SingleEnemy, PlayerSkill::DamageType::Physical, {}, 1, 0)
     };
 }
 
@@ -91,6 +91,8 @@ void Player::useItem(size_t index){
 }
 
 void Player::action(vector<Creature*> team, vector<Creature*> monsters){
+    updateEffects();
+
     if(!this->isAlive()){
         return;
     }
@@ -106,7 +108,8 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
 
     cout << "Choose a skill to use:\n";
     for(size_t i = 0; i < skillBook.size(); ++i){
-        cout << "[" << i << "] " << skillBook[i].getName() << "\n";
+        cout << "[" << i << "] ";
+        skillBook[i].showInfo();
     }
 
     int skillChoice = -1;
@@ -131,13 +134,13 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
     cout << "\nChoose a target:\n";
     if(selectedSkill.getTargetType() == PlayerSkill::TargetType::AllEnemies || selectedSkill.getTargetType() == PlayerSkill::TargetType::SingleEnemy){
         for(size_t i = 0; i < monsters.size(); ++i){
-            if(monsters[i] && monsters[i]->isAlive()){
+            if(monsters[i] != nullptr && monsters[i]->isAlive()){
                 cout << "[" << i << "] " << monsters[i]->getName() << " (HP: " << monsters[i]->getHp() << "/" << monsters[i]->getMaxHp() << ")\n";
             }
         }
     }else if(selectedSkill.getTargetType() == PlayerSkill::TargetType::AllAllies || selectedSkill.getTargetType() == PlayerSkill::TargetType::SingleAlly){
         for(size_t i = 0; i < team.size(); ++i){
-            if(team[i] && monsters[i]->isAlive()){
+            if(team[i] != nullptr && team[i]->isAlive()){
                 cout << "[" << i << "] " << team[i]->getName() << " (HP: " << team[i]->getHp() << "/" << team[i]->getMaxHp() << ")\n";
             }
         }
@@ -160,7 +163,7 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
 
     selectedTarget = monsters[targetChoice];
 
-    cout << "\n" << this->getName() << " used [" << selectedSkill.getName() << "]!\n";
+    cout << "\n" << this->getName() << " 使出了 [" << selectedSkill.getName() << "]!\n";
     
     selectedSkill.use(monsters, team, this, selectedTarget);
 }
@@ -237,8 +240,8 @@ void PlayerSkill::setTargetType(TargetType theTgtType){
     skillTarget = theTgtType;
 }
 
-void PlayerSkill::addEffect(const Effect& theEffect, TargetType theTarget){
-    effects.push_back(theEffect);
+void PlayerSkill::setDamageType(DamageType theDmgType){
+    dmgType = theDmgType;
 }
 
 void PlayerSkill::use(vector<Creature*> enemies, vector<Creature*> allies, Creature* caster, Creature* theTarget) const{
@@ -279,6 +282,14 @@ void PlayerSkill::use(vector<Creature*> enemies, vector<Creature*> allies, Creat
             effect.execute(*target);
         }
     }
+}
+
+void PlayerSkill::showInfo() const{
+    cout << getName() << "\t| 消耗Mp: " << getMpCost() << "\n";
+}
+
+void PlayerSkill::addEffect(const Effect& theEffect, TargetType theTarget){
+    effects.push_back(theEffect);
 }
 
 PlayerSkill& PlayerSkill::attach(const Effect& theEffect, TargetType theTarget){

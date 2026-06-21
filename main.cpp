@@ -25,7 +25,8 @@ int main() {
       new Priest("Priest"),     new Archer("Archer"),   new Thief("Thief"),
   };
   for (int i = 0; i < allAgent.size(); i++) {
-    cout << "[" << i << "] " << allAgent[i]->getName() << endl;
+    cout << "[" << i << "] ";
+    allAgent[i]->showInfo();
   }
 
   vector<Creature *> team;

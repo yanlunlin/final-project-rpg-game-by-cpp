@@ -70,6 +70,7 @@ public:
   void setLuk(unsigned int luk);
 
   unsigned int getStatBase(const string &theStatus) const;
+  unsigned int getStatTotal(const string &theStatus) const;
 
   double getAcc(const Creature &target) const; // Accuracy 命中率
   double getCri() const;                       // Critical 暴擊率

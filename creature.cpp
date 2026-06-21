@@ -80,6 +80,13 @@ unsigned int Creature::getStatBase(const string &theStatus) const {
   return 0;
 }
 
+unsigned int Creature::getStatTotal(const string& theStatus) const{
+  if(status.count(theStatus)){
+    return status.at(theStatus).getFinalValue();
+  }
+  return 0;
+}
+
 double Creature::getAcc(const Creature &target) const {
   return (getDex() * 2 + getLuk() * 0.5 - target.getAgi())/100.0;
 }

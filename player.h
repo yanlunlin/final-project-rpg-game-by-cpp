@@ -80,8 +80,10 @@ class PlayerSkill: public Skill{
         void setTargetType(TargetType theTgtType);
         void setDamageType(DamageType theDmgType);
 
-        void addEffect(const Effect& theEffect, TargetType theTgtType);
         void use(vector<Creature*> enemies, vector<Creature*> allies, Creature* caster, Creature* theTarget) const;
+        void showInfo() const;
+
+        void addEffect(const Effect& theEffect, TargetType theTgtType);
         PlayerSkill& attach(const Effect& theEffect, TargetType theTarget);
 };
 
