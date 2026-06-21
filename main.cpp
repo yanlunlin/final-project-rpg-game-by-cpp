@@ -9,9 +9,62 @@
 using namespace std;
 
 int main() {
-  cout << "=== 系統初始化中 ===\n";
+  cout << "Game Start (Press Enter)" << endl;
+  cin.get();
+  cout << "\033[2J\033[1;1H";
 
-  // 1. 建立史萊姆的技能書與史萊姆本體
+  cout << "Choose your team member> \n";
+  vector<Player *> allAgent = {
+      new Swordman("Swordman"), new Warrior("Warrior"), new Wizard("Wizard"),
+      new Priest("Priest"),     new Archer("Archer"),   new Thief("Thief"),
+  };
+  for (int i = 0; i < allAgent.size(); i++) {
+    cout << "[" << i << "] " << allAgent[i]->getName() << endl;
+  }
+
+  vector<Creature *> team;
+
+  for (int i = 0; i < 4; i++) {
+    int choice = -1;
+    cout << "請招募第 " << (i + 1) << " 位隊員 (輸入代號 0-5): ";
+    cin >> choice;
+
+    // 🛡️ 結合我們剛學的 cin 防呆機制
+    if (cin.fail() || choice < 0 || choice >= allAgent.size()) {
+      cin.clear();
+      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+      cout << "Error Input\n";
+      i--; // 讓這回合重跑一次
+      continue;
+    }
+
+    Player *newMember = nullptr;
+    switch (choice) {
+    case 0:
+      newMember = new Swordman("Swordman");
+      break;
+    case 1:
+      newMember = new Warrior("Warrior");
+      break;
+    case 2:
+      newMember = new Wizard("Wizard");
+      break;
+    case 3:
+      newMember = new Priest("Priest");
+      break;
+    case 4:
+      newMember = new Archer("Archer");
+      break;
+    case 5:
+      newMember = new Thief("Thief");
+      break;
+    }
+
+    team.push_back(newMember);
+  }
+
+  cout << "\033[2J\033[1;1H";
+  cout << "進入戰鬥 \n";
   vector<MonsterSkill *> slimeSkillBook = {
       new MonsterSkill("撞擊", MonsterSkill::target::player, 1,
                        {
@@ -23,38 +76,61 @@ int main() {
                        }),
   };
 
-  // 🎯 這裡一定要用 new，因為你的 combat 容器是裝指標 Creature*
   Monster *slime =
       new Monster("史萊姆", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
+  vector<Creature *> monsters;
+  monsters.push_back(slime);
 
-  // 2. 建立玩家測試機體 (這裡的參數請替換成你 Player 實際的建構子)
-  // 假設依序為：名字, HP, MP, AGI, ATK, MATK, DEF, MDEF
-  Player *hero = new Swordman("超強劍士");
-
-  // 3. 建立並配置陣營隊伍
-  vector<Creature *> player_team;
-  player_team.push_back(hero);
-
-  vector<Creature *> monster_team;
-  monster_team.push_back(slime);
-
-  // 4. 戰鬥前情提要
-  cout << "\n⚔️ 戰鬥開始！\n";
-  cout << hero->getName() << " (HP: " << hero->getHp()
-       << ", AGI: " << hero->getAgi() << ") VS ";
-  cout << slime->getName() << " (HP: " << slime->getHp()
-       << ", AGI: " << slime->getAgi() << ")\n";
-  cout << "------------------------------------\n";
-
-  // 5. 進入核心戰鬥迴圈
-  combat(player_team, monster_team);
-
-  // 6. 戰鬥結束後的驗證
-  cout << "------------------------------------\n";
-  cout << "🎉 戰鬥結束！結算畫面：\n";
-  cout << "目前玩家金幣 (Player::wallet): " << Player::wallet << " G\n";
-  cout << hero->getName() << " 剩餘 HP: " << hero->getHp() << "\n";
+  combat(team, monsters);
 }
+
+//   cout << "=== 系統初始化中 ===\n";
+//
+//   // 1. 建立史萊姆的技能書與史萊姆本體
+//   vector<MonsterSkill *> slimeSkillBook = {
+//       new MonsterSkill("撞擊", MonsterSkill::target::player, 1,
+//                        {
+//                            new Effect(),
+//                        }),
+//       new MonsterSkill("緩速", MonsterSkill::target::player, 0,
+//                        {
+//                            new Effect("緩速", "agi", ValueType::Flat, -5,
+//                            3),
+//                        }),
+//   };
+//
+//   // 🎯 這裡一定要用 new，因為你的 combat 容器是裝指標 Creature*
+//   Monster *slime =
+//       new Monster("史萊姆", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
+//
+//   // 2. 建立玩家測試機體 (這裡的參數請替換成你 Player 實際的建構子)
+//   // 假設依序為：名字, HP, MP, AGI, ATK, MATK, DEF, MDEF
+//   Player *hero = new Swordman("超強劍士");
+//
+//   // 3. 建立並配置陣營隊伍
+//   vector<Creature *> player_team;
+//   player_team.push_back(hero);
+//
+//   vector<Creature *> monster_team;
+//   monster_team.push_back(slime);
+//
+//   // 4. 戰鬥前情提要
+//   cout << "\n⚔️ 戰鬥開始！\n";
+//   cout << hero->getName() << " (HP: " << hero->getHp()
+//        << ", AGI: " << hero->getAgi() << ") VS ";
+//   cout << slime->getName() << " (HP: " << slime->getHp()
+//        << ", AGI: " << slime->getAgi() << ")\n";
+//   cout << "------------------------------------\n";
+//
+//   // 5. 進入核心戰鬥迴圈
+//   combat(player_team, monster_team);
+//
+//   // 6. 戰鬥結束後的驗證
+//   cout << "------------------------------------\n";
+//   cout << "🎉 戰鬥結束！結算畫面：\n";
+//   cout << "目前玩家金幣 (Player::wallet): " << Player::wallet << " G\n";
+//   cout << hero->getName() << " 剩餘 HP: " << hero->getHp() << "\n";
+// }
 
 // #include <iostream>
 // #include <vector>
@@ -147,5 +223,4 @@ int main() {
 //     }
 //
 //     cout << "\n===== End of Test =====" << endl;
-//     return 0;
-// }
+//     return 0
