@@ -7,6 +7,7 @@
 using std::string;
 using std::vector;
 using std::cout;
+using std::cin;
 using std::endl;
 
 Player::Player(): Creature(), backpack(){}
@@ -41,6 +42,11 @@ void Player::updateEffects(){
     for(auto it = activeEffect.begin(); it != activeEffect.end(); ){
         
         it->execute(*this);
+
+        unsigned int currentTurns = it->getRemainingTurns();
+        if(currentTurns > 0){
+            it->setRemainingTurns(currentTurns - 1);
+        }
 
         if(it->getRemainingTurns() == 0){
             it = activeEffect.erase(it);
@@ -78,6 +84,72 @@ void Player::useItem(size_t index){
     }else if(itemType == "Weapon" || itemType == "Equipment"){
         this->changeEquipment(index);
     }
+}
+
+void Player::action(vector<Creature*> team, vector<Creature*> monsters){
+    if(!this->isAlive()){
+        return;
+    }
+
+    cout << "\n====================================\n";
+    cout << "It's " << this->getName() << "'s turn!\n";
+    cout << "====================================\n";
+
+    if(skillBook.empty()){
+        cout << this->getName() << " doesn't know any skills and can only wait...\n";
+        return;
+    }
+
+    cout << "Choose a skill to use:\n";
+    for(size_t i = 0; i < skillBook.size(); ++i){
+        cout << "[" << i << "] " << skillBook[i].getName() << "\n";
+    }
+
+    int skillChoice = -1;
+
+    while(true){
+        cout << "Enter skill number: ";
+        cin >> skillChoice;
+
+        if(cin.fail() || skillChoice < 0 || skillChoice >= skillBook.size()){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid selection. Please try again.\n";
+        }else{
+            break;
+        }
+    }
+
+    PlayerSkill& selectedSkill = skillBook[skillChoice];
+
+    Creature* selectedTarget = nullptr;
+
+    cout << "\nChoose a target:\n";
+    for(size_t i = 0; i < monsters.size(); ++i){
+        if(monsters[i] && monsters[i]->isAlive()){
+            cout << "[" << i << "] " << monsters[i]->getName() << " (HP: " << monsters[i]->getHp() << "/" << monsters[i]->getMaxHp() << ")\n";
+        }
+    }
+
+    int targetChoice = -1;
+    while(true){
+        cout << "Enter target number: ";
+        cin >> targetChoice;
+
+        if(cin.fail() || targetChoice < 0 || targetChoice >= monsters.size() || monsters[targetChoice] == nullptr || !monsters[targetChoice]->isAlive()){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid target. Please choose a living enemy.\n";
+        }else{
+            break;
+        }
+    }
+
+    selectedTarget = monsters[targetChoice];
+
+    cout << "\n" << this->getName() << " used [" << selectedSkill.getName() << "]!\n";
+    
+    selectedSkill.use(monsters, this, selectedTarget);
 }
 
 void Player::applyGearStats(const Item& gear, bool isEquipping){
@@ -128,31 +200,46 @@ void Player::changeEquipment(size_t index){
 }
 
 PlayerSkill::PlayerSkill(): Skill(){}
-PlayerSkill::PlayerSkill(string theName, int theDamageMultiplier, int theMpCost): Skill(theName, theDamageMultiplier, theMpCost){}
+PlayerSkill::PlayerSkill(string theName, Target theTarget, vector<Effect> theEffect, int theDamageMultiplier, int theMpCost):
+    Skill(theName, theDamageMultiplier, theMpCost){}
 
-void PlayerSkill::addEffect(Effect* theEffect, Target theTarget){
-    effects.push_back({theEffect, theTarget});
+void PlayerSkill::addEffect(const Effect& theEffect, Target theTarget){
+    effects.push_back(theEffect);
 }
 
 void PlayerSkill::use(vector<Creature*> monsters, Creature* caster, Creature* theTarget) const{
-    for(const auto& instance : effects){
-        if(instance.targetType == Target::All){
-            for(auto* monster : monsters){
-                if(monster && monster->isAlive()){
-                    instance.effectPtr->execute(*monster);
-                    caster->attack(*monster, caster->getAtk() * getDamage());
-                }
+    vector<Creature*> validTargets;
+
+    if(skillTarget == Target::All){
+        for(auto* monster : monsters){
+            if(monster != nullptr && monster->isAlive()){
+                validTargets.push_back(monster);
             }
-        }else if(instance.targetType == Target::Single){
-            if(theTarget && theTarget->isAlive()){
-                instance.effectPtr->execute(*theTarget);
-                caster->attack(*theTarget, caster->getAtk() * getDamage());
-            }
+        }
+    }else{
+        if(theTarget != nullptr && theTarget->isAlive()){
+            validTargets.push_back(theTarget);
+        }else{
+            cout << "無效的目標！" << endl;
+            return; 
+        }
+    }
+    
+    for(auto* target : validTargets){
+        if(getDamage() > 0){
+            int finalDamage = caster->getAtk() * getDamage();
+            caster->attack(*target, finalDamage);
+        }
+        for(const auto& effect : effects){
+            effect.execute(*target);
         }
     }
 }
 
-
+PlayerSkill& PlayerSkill::attach(const Effect& theEffect, Target theTarget){
+    effects.push_back(theEffect);
+    return *this;
+}
 
 Swordman::Swordman(): Player(){}
 Swordman::Swordman(string theName): Player(theName, 160, 30,  8,  16, 2,  12, 6,  10, 6){}

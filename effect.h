@@ -36,7 +36,7 @@ public:
   void setValue(int theValue);
   void setRemainingTurns(unsigned int theRemainingTurns);
 
-  void execute(Creature &target);
+  void execute(Creature &target) const;
 };
 
 /*class Heal: public Effect{

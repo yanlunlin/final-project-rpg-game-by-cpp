@@ -51,26 +51,25 @@ class Player: public Creature {
         /*void attack(Monster& target);
         void takeDamage(const Monster& attacker, int damage);*/
         void useItem(size_t index);
+
+        void action(vector<Creature*> team, vector<Creature*> monster) override;
 };
 
 class PlayerSkill: public Skill{
-    protected:
+    public:
         enum class Target{
             Single, All
         };
-        struct EffectInstance{
-            Effect* effectPtr;
-            Target targetType;
-        };
-
-        vector<EffectInstance> effects;
+    private:
+        Target skillTarget;
+        vector<Effect> effects;
     public:
         PlayerSkill();
-        PlayerSkill(string theName, int theDamageMultiplier, int theMpCost);
+        PlayerSkill(string theName, Target theTarget, vector<Effect> theEffect, int theDamageMultiplier, int theMpCost);
 
-        void addEffect(Effect* theEffect, Target theTarget);
+        void addEffect(const Effect& theEffect, Target theTarget);
         void use(vector<Creature*> monsters, Creature* caster, Creature* theTarget) const;
-        PlayerSkill& attach(Effect* theEffect, Target theTarget);
+        PlayerSkill& attach(const Effect& theEffect, Target theTarget);
 };
 
 class Swordman: public Player{

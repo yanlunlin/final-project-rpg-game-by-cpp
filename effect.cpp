@@ -47,7 +47,7 @@ void Effect::setRemainingTurns(unsigned int theRemainingTurns){
     remainingTurns = theRemainingTurns;
 }
 
-void Effect::execute(Creature& target){
+void Effect::execute(Creature& target) const{
     if(remainingTurns > 0){
         int finalValue = 0;
 
@@ -87,7 +87,7 @@ void Effect::execute(Creature& target){
             }
         }
 
-        remainingTurns--;
+        //remainingTurns--;
     }
 }
 
