@@ -98,15 +98,15 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
     }
 
     cout << "\n====================================\n";
-    cout << "It's " << this->getName() << "'s turn!\n";
+    cout << "輪到" << this->getName() << "攻擊!\n";
     cout << "====================================\n";
 
     if(skillBook.empty()){
-        cout << this->getName() << " doesn't know any skills and can only wait...\n";
+        cout << this->getName() << "不會任何skill, 他只能等...\n";
         return;
     }
 
-    cout << "Choose a skill to use:\n";
+    cout << "選擇並使用技能:\n";
     for(size_t i = 0; i < skillBook.size(); ++i){
         cout << "[" << i << "] ";
         skillBook[i].showInfo();
@@ -115,13 +115,13 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
     int skillChoice = -1;
 
     while(true){
-        cout << "Enter skill number: ";
+        cout << "輸入skill號碼: ";
         cin >> skillChoice;
 
         if(cin.fail() || skillChoice < 0 || skillChoice >= skillBook.size()){
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid selection. Please try again.\n";
+            cout << "輸入錯誤, 請再次嘗試\n";
         }else{
             break;
         }
@@ -132,7 +132,7 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
     Creature* selectedTarget = nullptr;
     vector<Creature*>& targetList = (selectedSkill.getTargetType() == PlayerSkill::TargetType::AllEnemies || selectedSkill.getTargetType() == PlayerSkill::TargetType::SingleEnemy) ? monsters : team;
 
-    cout << "\nChoose a target:\n";
+    cout << "\n選擇攻擊對象:\n";
     if(selectedSkill.getTargetType() == PlayerSkill::TargetType::AllEnemies || selectedSkill.getTargetType() == PlayerSkill::TargetType::SingleEnemy){
         for(size_t i = 0; i < monsters.size(); ++i){
             if(monsters[i] != nullptr && monsters[i]->isAlive()){
@@ -150,13 +150,13 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
 
     int targetChoice = -1;
     while(true){
-        cout << "Enter target number: ";
+        cout << "輸入攻擊對象號碼: ";
         cin >> targetChoice;
 
         if(cin.fail() || targetChoice < 0 || targetChoice >= targetList.size() || targetList[targetChoice] == nullptr || !targetList[targetChoice]->isAlive()){
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid target. Please choose a living target.\n";
+            cout << "輸入錯誤, 請再次嘗試\n";
         }else{
             break;
         }

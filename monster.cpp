@@ -65,7 +65,7 @@ void Monster::action(vector<Creature *> team, vector<Creature *> monster) {
   }
 
   cout << "\n====================================\n";
-  cout << "It's " << this->getName() << "'s turn!\n";
+  cout << "迎接" << this->getName() << "的攻擊!\n";
   cout << "====================================\n";
 
   if (skillBook.empty()) {

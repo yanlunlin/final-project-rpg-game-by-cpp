@@ -59,7 +59,7 @@ void combat(vector<Creature *> &team, vector<Creature *> &monster) {
   // end
   if (endd == winner::team) {
     cout << endl;
-    cout << "戰鬥結束 (Press Enter continue.)" << endl;
+    cout << "戰鬥結束 (按 Enter 繼續)" << endl;
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
@@ -67,8 +67,8 @@ void combat(vector<Creature *> &team, vector<Creature *> &monster) {
 
     for (auto i : monster) {
       Player::wallet += static_cast<Monster *>(i)->getRewardGold();
-      cout << "YOU GOT MONEY!!!" << endl
-           << "you have " << Player::wallet << " money!";
+      cout << "你獲得了金幣!!!" << endl
+           << "你有" << Player::wallet << "個金幣!";
     }
   } else {
     cout << "GAME OVER!!!";
