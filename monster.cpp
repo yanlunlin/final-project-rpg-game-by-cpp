@@ -15,6 +15,10 @@ unsigned int Monster::getRewardGold() const { return rewardGold; }
 void Monster::setRewardGold(unsigned int rewardGold) {
   this->rewardGold = rewardGold;
 }
+void Monster::showInfo() const {
+  cout << getName() << "\t| ";
+  cout << "Hp: " << getHp() << "/" << getMaxHp() << "\t| ";
+}
 
 MonsterSkill::MonsterSkill() : Skill() {}
 MonsterSkill::MonsterSkill(string theName, target tgt, int theDamageCross,

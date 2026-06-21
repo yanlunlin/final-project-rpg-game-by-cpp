@@ -25,6 +25,7 @@ public:
 
   unsigned int getRewardGold() const;
   void setRewardGold(unsigned int rewardGold);
+  void showInfo() const;
 
   void action(vector<Creature *> team, vector<Creature *> monster) override;
 };
