@@ -123,7 +123,7 @@ void Creature::magicAttack(Creature& target, unsigned int rawMagicDamage) const{
     finalDamage = static_cast<unsigned int>(finalDamage*2);
     cout << this->getName() << " 暴擊成功！\n";
   }
-  int actualDamage = rawMagicDamage - target.getMdef()/2;
+  int actualDamage = finalDamage - target.getMdef()/2;
   if(actualDamage <= 0){
     actualDamage = 0;
   }
