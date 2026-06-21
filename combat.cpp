@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 #include <vector>
 
 using namespace std;
@@ -48,14 +49,26 @@ void combat(vector<Creature *> &team, vector<Creature *> &monster) {
          [](Creature *a, Creature *b) { return a->getAgi() > b->getAgi(); });
     for (auto i : action) {
       i->action(team, monster);
+      endd = notEnd();
+      if (endd != winner::nobody) {
+        break;
+      }
     }
-    endd = notEnd();
   } while (endd == winner::nobody);
 
   // end
   if (endd == winner::team) {
+    cout << endl;
+    cout << "戰鬥結束 (Press Enter continue.)" << endl;
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+    cout << "\033[2J\033[1;1H";
+
     for (auto i : monster) {
       Player::wallet += static_cast<Monster *>(i)->getRewardGold();
+      cout << "YOU GOT MONEY!!!" << endl
+           << "you have " << Player::wallet << " money!";
     }
   } else {
     cout << "GAME OVER!!!";
