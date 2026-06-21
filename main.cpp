@@ -1,99 +1,289 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
 #include "combat.h"
 #include "effect.h"
 #include "monster.h"
 #include "player.h"
 #include "skill.h"
+
 #include <iostream>
+#include <limits>
 #include <vector>
 
 using namespace std;
 
 int main() {
-  SetConsoleOutputCP(CP_UTF8); 
-  SetConsoleCP(CP_UTF8);
+    // 啟用 UTF-8，避免中文亂碼
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
 
-  cout << "Game Start (Press Enter)" << endl;
-  cin.get();
-  cout << "\033[2J\033[1;1H";
+    // =============================
+    // 遊戲開場
+    // =============================
 
-  cout << "Choose your team member> \n";
-  vector<Player *> allAgent = {
-      new Swordman("Swordman"), new Warrior("Warrior"), new Wizard("Wizard"),
-      new Priest("Priest"),     new Archer("Archer"),   new Thief("Thief"),
-  };
-  for (int i = 0; i < allAgent.size(); i++) {
-    cout << "[" << i << "] ";
-    allAgent[i]->showInfo();
-  }
+    cout << "=====================================\n";
+    cout << "      米德加爾特保衛戰 RPG\n";
+    cout << "=====================================\n";
+    cout << "魔物正在入侵米德加爾特大陸。\n";
+    cout << "你必須組建一支冒險隊伍，擊敗來襲的怪物。\n\n";
 
-  vector<Creature *> team;
+    cout << "按 Enter 開始遊戲...";
+    cin.get();
 
-  for (int i = 0; i < 4; i++) {
-    int choice = -1;
-    cout << "請招募第 " << (i + 1) << " 位隊員 (輸入代號 0-5): ";
-    cin >> choice;
+    cout << "\033[2J\033[1;1H";
 
-    // 🛡️ 結合我們剛學的 cin 防呆機制
-    if (cin.fail() || choice < 0 || choice >= allAgent.size()) {
-      cin.clear();
-      cin.ignore(numeric_limits<streamsize>::max(), '\n');
-      cout << "Error Input\n";
-      i--; // 讓這回合重跑一次
-      continue;
+    // =============================
+    // 招募隊伍
+    // =============================
+
+    cout << "=====================================\n";
+    cout << "          隊伍招募畫面\n";
+    cout << "=====================================\n\n";
+
+    vector<Player*> allAgent = {
+        new Swordman("劍士"),
+        new Warrior("戰士"),
+        new Wizard("法師"),
+        new Priest("祭司"),
+        new Archer("弓箭手"),
+        new Thief("盜賊")
+    };
+
+    cout << "可招募角色：\n\n";
+
+    for (int i = 0; i < allAgent.size(); i++) {
+        cout << "[" << i << "] ";
+        allAgent[i]->showInfo();
+        cout << "------------------------\n";
     }
 
-    Player *newMember = nullptr;
-    switch (choice) {
-    case 0:
-      newMember = new Swordman("Swordman");
-      break;
-    case 1:
-      newMember = new Warrior("Warrior");
-      break;
-    case 2:
-      newMember = new Wizard("Wizard");
-      break;
-    case 3:
-      newMember = new Priest("Priest");
-      break;
-    case 4:
-      newMember = new Archer("Archer");
-      break;
-    case 5:
-      newMember = new Thief("Thief");
-      break;
+    vector<Creature*> team;
+
+    cout << "\n請選擇 4 位隊員組成冒險隊伍。\n\n";
+
+    for (int i = 0; i < 4; i++) {
+
+        int choice = -1;
+
+        cout << "請招募第 "
+             << (i + 1)
+             << " 位隊員 (輸入代號 0~5)：";
+
+        cin >> choice;
+
+        // 輸入驗證
+        if (cin.fail() ||
+            choice < 0 ||
+            choice >= allAgent.size()) {
+
+            cin.clear();
+            cin.ignore(
+                numeric_limits<streamsize>::max(),
+                '\n'
+            );
+
+            cout << "\n輸入錯誤，請重新選擇。\n\n";
+
+            i--;
+            continue;
+        }
+
+        Player* newMember = nullptr;
+
+        switch (choice) {
+        case 0:
+            newMember = new Swordman("劍士");
+            break;
+
+        case 1:
+            newMember = new Warrior("戰士");
+            break;
+
+        case 2:
+            newMember = new Wizard("法師");
+            break;
+
+        case 3:
+            newMember = new Priest("祭司");
+            break;
+
+        case 4:
+            newMember = new Archer("弓箭手");
+            break;
+
+        case 5:
+            newMember = new Thief("盜賊");
+            break;
+        }
+
+        team.push_back(newMember);
+
+        cout << "成功招募！\n\n";
     }
 
-    team.push_back(newMember);
-  }
+    // 清畫面
+    cout << "\033[2J\033[1;1H";
 
-  cout << "\033[2J\033[1;1H";
-  cout << "進入戰鬥 \n";
-  vector<MonsterSkill *> slimeSkillBook = {
-      new MonsterSkill("撞擊", MonsterSkill::target::player, 1,
-                       {
-                           new Effect(),
-                       }),
-      new MonsterSkill("緩速", MonsterSkill::target::player, 0,
-                       {
-                           new Effect("緩速", "agi", ValueType::Flat, -5, 3),
-                       }),
-  };
+    // =============================
+    // 第一關劇情
+    // =============================
 
-  Monster *slime =
-      new Monster("史萊姆", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
-  vector<Creature *> monsters;
-  monsters.push_back(slime);
+    cout << "=====================================\n";
+    cout << "            第一關\n";
+    cout << "          新手森林\n";
+    cout << "=====================================\n\n";
 
-  combat(team, monsters);
+    cout << "隊伍進入森林後，發現一隻奇怪的魔物。\n";
+    cout << "牠看起來黏黏的，而且充滿敵意。\n\n";
+
+    cout << "史萊姆出現了！\n\n";
+
+    // =============================
+    // 怪物技能
+    // =============================
+
+    vector<MonsterSkill*> slimeSkillBook = {
+
+        new MonsterSkill(
+            "撞擊",
+            MonsterSkill::target::player,
+            1,
+            {
+                new Effect(),
+            }
+        ),
+
+        new MonsterSkill(
+            "緩速",
+            MonsterSkill::target::player,
+            0,
+            {
+                new Effect(
+                    "緩速",
+                    "agi",
+                    ValueType::Flat,
+                    -5,
+                    3
+                ),
+            }
+        )
+    };
+
+    // =============================
+    // 建立怪物
+    // =============================
+
+    Monster* slime =
+        new Monster(
+            "史萊姆",
+            slimeSkillBook,
+            50,  // HP
+            15,  // MP
+            15,  // AGI
+            0,   // ATK
+            15,  // MATK
+            0,   // DEF
+            5    // MDEF
+        );
+
+    vector<Creature*> monsters;
+    monsters.push_back(slime);
+
+    cout << "戰鬥開始！\n\n";
+
+    // =============================
+    // 戰鬥系統
+    // =============================
+
+    combat(team, monsters);
+
+    // =============================
+    // 戰鬥結束
+    // =============================
+
+    cout << "\n=====================================\n";
+    cout << "           戰鬥結束\n";
+    cout << "=====================================\n";
+
+    cout << "\n感謝遊玩！\n";
+
+    return 0;
 }
 
-//   cout << "=== 系統初始化中 ===\n";
-//
-//   // 1. 建立史萊姆的技能書與史萊姆本體
+// #define WIN32_LEAN_AND_MEAN
+// #include <windows.h>
+
+// #include "combat.h"
+// #include "effect.h"
+// #include "monster.h"
+// #include "player.h"
+// #include "skill.h"
+// #include <iostream>
+// #include <vector>
+
+// using namespace std;
+
+// int main() {
+//   SetConsoleOutputCP(CP_UTF8); 
+//   SetConsoleCP(CP_UTF8);
+
+//   cout << "Game Start (Press Enter)" << endl;
+//   cin.get();
+//   cout << "\033[2J\033[1;1H";
+
+//   cout << "Choose your team member> \n";
+//   vector<Player *> allAgent = {
+//       new Swordman("Swordman"), new Warrior("Warrior"), new Wizard("Wizard"),
+//       new Priest("Priest"),     new Archer("Archer"),   new Thief("Thief"),
+//   };
+//   for (int i = 0; i < allAgent.size(); i++) {
+//     cout << "[" << i << "] ";
+//     allAgent[i]->showInfo();
+//   }
+
+//   vector<Creature *> team;
+
+//   for (int i = 0; i < 4; i++) {
+//     int choice = -1;
+//     cout << "請招募第 " << (i + 1) << " 位隊員 (輸入代號 0-5): ";
+//     cin >> choice;
+
+//     // 🛡️ 結合我們剛學的 cin 防呆機制
+//     if (cin.fail() || choice < 0 || choice >= allAgent.size()) {
+//       cin.clear();
+//       cin.ignore(numeric_limits<streamsize>::max(), '\n');
+//       cout << "Error Input\n";
+//       i--; // 讓這回合重跑一次
+//       continue;
+//     }
+
+//     Player *newMember = nullptr;
+//     switch (choice) {
+//     case 0:
+//       newMember = new Swordman("Swordman");
+//       break;
+//     case 1:
+//       newMember = new Warrior("Warrior");
+//       break;
+//     case 2:
+//       newMember = new Wizard("Wizard");
+//       break;
+//     case 3:
+//       newMember = new Priest("Priest");
+//       break;
+//     case 4:
+//       newMember = new Archer("Archer");
+//       break;
+//     case 5:
+//       newMember = new Thief("Thief");
+//       break;
+//     }
+
+//     team.push_back(newMember);
+//   }
+
+//   cout << "\033[2J\033[1;1H";
+//   cout << "進入戰鬥 \n";
 //   vector<MonsterSkill *> slimeSkillBook = {
 //       new MonsterSkill("撞擊", MonsterSkill::target::player, 1,
 //                        {
@@ -101,133 +291,14 @@ int main() {
 //                        }),
 //       new MonsterSkill("緩速", MonsterSkill::target::player, 0,
 //                        {
-//                            new Effect("緩速", "agi", ValueType::Flat, -5,
-//                            3),
+//                            new Effect("緩速", "agi", ValueType::Flat, -5, 3),
 //                        }),
 //   };
-//
-//   // 🎯 這裡一定要用 new，因為你的 combat 容器是裝指標 Creature*
+
 //   Monster *slime =
 //       new Monster("史萊姆", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
-//
-//   // 2. 建立玩家測試機體 (這裡的參數請替換成你 Player 實際的建構子)
-//   // 假設依序為：名字, HP, MP, AGI, ATK, MATK, DEF, MDEF
-//   Player *hero = new Swordman("超強劍士");
-//
-//   // 3. 建立並配置陣營隊伍
-//   vector<Creature *> player_team;
-//   player_team.push_back(hero);
-//
-//   vector<Creature *> monster_team;
-//   monster_team.push_back(slime);
-//
-//   // 4. 戰鬥前情提要
-//   cout << "\n⚔️ 戰鬥開始！\n";
-//   cout << hero->getName() << " (HP: " << hero->getHp()
-//        << ", AGI: " << hero->getAgi() << ") VS ";
-//   cout << slime->getName() << " (HP: " << slime->getHp()
-//        << ", AGI: " << slime->getAgi() << ")\n";
-//   cout << "------------------------------------\n";
-//
-//   // 5. 進入核心戰鬥迴圈
-//   combat(player_team, monster_team);
-//
-//   // 6. 戰鬥結束後的驗證
-//   cout << "------------------------------------\n";
-//   cout << "🎉 戰鬥結束！結算畫面：\n";
-//   cout << "目前玩家金幣 (Player::wallet): " << Player::wallet << " G\n";
-//   cout << hero->getName() << " 剩餘 HP: " << hero->getHp() << "\n";
-// }
+//   vector<Creature *> monsters;
+//   monsters.push_back(slime);
 
-// #include <iostream>
-// #include <vector>
-//
-// #include "skill.h"
-// #include "creature.h"
-// #include "player.h"
-// #include "monster.h"
-// #include "item.h"
-// #include "inventory.h"
-// #include "weapon.h"
-// #include "potion.h"
-//
-// using namespace std;
-//
-// int main() {
-//     cout << "===== Skill Test =====" << endl;
-//     Skill fireBall("Fire Ball", 50, 20);
-//     fireBall.showInfo();
-//     cout << "getDamage(): " << fireBall.getDamage() << endl;
-//     cout << "getMpCost(): " << fireBall.getMpCost() << endl;
-//     fireBall.use();
-//
-//     cout << "\n===== Creature Test =====" << endl;
-//     Creature base("Base Creature", 100, 30, 10, 12, 8, 5, 4, 6, 3);
-//     base.showInfo();
-//     base.takeDamage(25);
-//     cout << "After taking 25 damage:" << endl;
-//     base.showInfo();
-//     cout << "isAlive(): " << (base.isAlive() ? "true" : "false") << endl;
-//
-//     cout << "\n===== Player Test =====" << endl;
-//     Player hero;
-//     hero.setName("Hero");
-//     hero.setHp(120);
-//     hero.setMp(40);
-//     hero.setAgi(10);
-//     hero.setAtk(15);
-//     hero.setMatk(8);
-//     hero.setDef(6);
-//     hero.setMdef(4);
-//     hero.setDex(7);
-//     hero.setLuk(3);
-//     hero.showInfo();
-//     cout << "Hero alive? " << (hero.isAlive() ? "true" : "false") << endl;
-//
-//     cout << "\n===== Monster Test =====" << endl;
-//     Monster slime("Green", 60, 8, 20, 0, 0, 0, 0, 0, 0, 100);
-//     slime.showInfo();
-//     cout << "Reward gold: " << slime.getRewardGold() << endl;
-//     cout << "Slime alive? " << (slime.isAlive() ? "true" : "false") <<
-//     endl;
-//
-//     cout << "\n===== Battle Test =====" << endl;
-//     hero.attack(slime);
-//     cout << "After Hero attacks Slime:" << endl;
-//     slime.showInfo();
-//
-//     slime.attack(hero);
-//     cout << "After Slime attacks Hero:" << endl;
-//     hero.showInfo();
-//
-//     cout << "\n===== Item / Weapon / Potion Test =====" << endl;
-//     Weapon ironSword("Iron Sword", 10, 2);
-//     Potion healingPotion("Healing Potion", "hp", 25, 3);
-//
-//     ironSword.showInfo();
-//     healingPotion.showInfo();
-//
-//     cout << "Use sword: " << (ironSword.use() ? "success" : "fail") <<
-//     endl; cout << "Use potion: " << (healingPotion.use() ? "success" :
-//     "fail") << endl;
-//
-//     cout << "After using items:" << endl;
-//     ironSword.showInfo();
-//     healingPotion.showInfo();
-//
-//     cout << "\n===== Inventory Test =====" << endl;
-//     vector<Item> bag = { healingPotion, ironSword };
-//     Inventory inv(5, bag);
-//     cout << "Inventory max size: " << inv.getMaxSize() << endl;
-//     cout << "Inventory item count: " << inv.getStorage().size() << endl;
-//
-//     if (!inv.getStorage().empty()) {
-//         cout << "First item before use:" << endl;
-//         inv.getStorage()[0].showInfo();
-//         inv.useItem(0);
-//         cout << "First item after use:" << endl;
-//         inv.getStorage()[0].showInfo();
-//     }
-//
-//     cout << "\n===== End of Test =====" << endl;
-//     return 0
+//   combat(team, monsters);
+// }
