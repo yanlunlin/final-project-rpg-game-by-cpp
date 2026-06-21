@@ -13,8 +13,9 @@ using std::string;
 using std::vector;
 
 class Monster;
+class PlayerSkill;
 
-class Player : public Creature {
+class Player: public Creature {
     private:
         /*map<string, unsigned int> status{
             {"hp", 0}, {"mp", 0},
@@ -29,7 +30,7 @@ class Player : public Creature {
         Item equippedWeapon = Item::CreateEmpty();
         Item equippedArmor  = Item::CreateEmpty();
         vector<Effect> activeEffect;
-        vector<Skill> skillBook;
+        vector<PlayerSkill> skillBook;
 
         void applyGearStats(const Item& gear, bool isEquipping);
         void changeEquipment(size_t backpackIndex);
@@ -52,7 +53,27 @@ class Player : public Creature {
         void useItem(size_t index);
 };
 
-class Swordman : public Player{
+class PlayerSkill: public Skill{
+    protected:
+        enum class Target{
+            Single, All
+        };
+        struct EffectInstance{
+            Effect* effectPtr;
+            Target targetType;
+        };
+
+        vector<EffectInstance> effects;
+    public:
+        PlayerSkill();
+        PlayerSkill(string theName, int theDamageMultiplier, int theMpCost);
+
+        void addEffect(Effect* theEffect, Target theTarget);
+        void use(vector<Creature*> monsters, Creature* caster, Creature* theTarget) const;
+        PlayerSkill& attach(Effect* theEffect, Target theTarget);
+};
+
+class Swordman: public Player{
     public:
         Swordman();
         Swordman(string theName);
@@ -61,7 +82,7 @@ class Swordman : public Player{
             unsigned int theDex, unsigned int theLuk);
 };
 
-class SwordMaster : public Swordman{
+class SwordMaster: public Swordman{
     public:
         SwordMaster();
         SwordMaster(string theName);
@@ -70,7 +91,7 @@ class SwordMaster : public Swordman{
             unsigned int theDex, unsigned int theLuk);
 };
 
-class Warrior : public Player{
+class Warrior: public Player{
     public:
         Warrior();
         Warrior(string theName);
@@ -79,7 +100,7 @@ class Warrior : public Player{
             unsigned int theDex, unsigned int theLuk);
 };
 
-class Crusader : public Warrior{
+class Crusader: public Warrior{
     public:
         Crusader();
         Crusader(string theName);
@@ -88,7 +109,7 @@ class Crusader : public Warrior{
             unsigned int theDex, unsigned int theLuk);
 };
 
-class Wizard : public Player{
+class Wizard: public Player{
     public:
         Wizard();
         Wizard(string theName);
@@ -97,7 +118,7 @@ class Wizard : public Player{
             unsigned int theDex, unsigned int theLuk);
 };
 
-class ArchWizard : public Wizard{
+class ArchWizard: public Wizard{
     public:
         ArchWizard();
         ArchWizard(string theName);
@@ -106,7 +127,7 @@ class ArchWizard : public Wizard{
             unsigned int theDex, unsigned int theLuk);
 };
 
-class Priest : public Player{
+class Priest: public Player{
     public:
         Priest();
         Priest(string theName);
@@ -115,7 +136,7 @@ class Priest : public Player{
             unsigned int theDex, unsigned int theLuk);
 };
 
-class ArchPriest : public Priest{
+class ArchPriest: public Priest{
     public:
         ArchPriest();
         ArchPriest(string theName);
@@ -124,7 +145,7 @@ class ArchPriest : public Priest{
             unsigned int theDex, unsigned int theLuk);
 };
 
-class Archer : public Player{
+class Archer: public Player{
     public:
         Archer();
         Archer(string theName);
@@ -133,7 +154,7 @@ class Archer : public Player{
             unsigned int theDex, unsigned int theLuk);
 };
 
-class Thief : public Player{
+class Thief: public Player{
     public:
         Thief();
         Thief(string theName);
@@ -142,7 +163,7 @@ class Thief : public Player{
             unsigned int theDex, unsigned int theLuk);
 };
 
-class Assassin : public Thief{
+class Assassin: public Thief{
     public:
         Assassin();
         Assassin(string theName);

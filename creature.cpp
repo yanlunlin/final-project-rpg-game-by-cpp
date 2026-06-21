@@ -5,9 +5,11 @@
 using namespace std;
 
 Creature::Creature() : name("") {}
-Creature::Creature(string name, unsigned int hp, unsigned int mp, unsigned int agi,
-  unsigned int atk, unsigned int matk, unsigned int def, unsigned int mdef,
-  unsigned int dex, unsigned int luk) : name(name) {
+Creature::Creature(string name, unsigned int hp, unsigned int mp,
+                   unsigned int agi, unsigned int atk, unsigned int matk,
+                   unsigned int def, unsigned int mdef, unsigned int dex,
+                   unsigned int luk)
+    : name(name) {
   status["maxHp"].base = hp;
   status["hp"].base = hp;
   status["maxMp"].base = mp;
@@ -22,17 +24,35 @@ Creature::Creature(string name, unsigned int hp, unsigned int mp, unsigned int a
 }
 
 string Creature::getName() const { return name; }
-unsigned int Creature::getMaxHp() const { return status.at("maxHp").getFinalValue(); }
+unsigned int Creature::getMaxHp() const {
+  return status.at("maxHp").getFinalValue();
+}
 unsigned int Creature::getHp() const { return status.at("hp").getFinalValue(); }
-unsigned int Creature::getMaxMp() const { return status.at("maxMp").getFinalValue(); }
+unsigned int Creature::getMaxMp() const {
+  return status.at("maxMp").getFinalValue();
+}
 unsigned int Creature::getMp() const { return status.at("mp").getFinalValue(); }
-unsigned int Creature::getAgi() const { return status.at("agi").getFinalValue(); }
-unsigned int Creature::getAtk() const { return status.at("atk").getFinalValue(); }
-unsigned int Creature::getMatk() const { return status.at("matk").getFinalValue(); }
-unsigned int Creature::getDef() const { return status.at("def").getFinalValue(); }
-unsigned int Creature::getMdef() const {return status.at("mdef").getFinalValue(); }
-unsigned int Creature::getDex() const { return status.at("dex").getFinalValue(); }
-unsigned int Creature::getLuk() const { return status.at("luk").getFinalValue(); }
+unsigned int Creature::getAgi() const {
+  return status.at("agi").getFinalValue();
+}
+unsigned int Creature::getAtk() const {
+  return status.at("atk").getFinalValue();
+}
+unsigned int Creature::getMatk() const {
+  return status.at("matk").getFinalValue();
+}
+unsigned int Creature::getDef() const {
+  return status.at("def").getFinalValue();
+}
+unsigned int Creature::getMdef() const {
+  return status.at("mdef").getFinalValue();
+}
+unsigned int Creature::getDex() const {
+  return status.at("dex").getFinalValue();
+}
+unsigned int Creature::getLuk() const {
+  return status.at("luk").getFinalValue();
+}
 void Creature::setName(string name) { this->name = name; }
 void Creature::setMaxHp(unsigned int maxHp) { status["maxHp"].base = maxHp; }
 void Creature::setHp(unsigned int hp) {
@@ -52,39 +72,37 @@ void Creature::setMdef(unsigned int mdef) { status["mdef"].base = mdef; }
 void Creature::setDex(unsigned int dex) { status["dex"].base = dex; }
 void Creature::setLuk(unsigned int luk) { status["luk"].base = luk; }
 
-unsigned int Creature::getStatBase(const string& theStatus) const{
+unsigned int Creature::getStatBase(const string &theStatus) const {
   if (status.count(theStatus)) {
     return status.at(theStatus).base;
   }
   return 0;
 }
 
-unsigned int Creature::getAcc(const Creature& target) const{
-  return getDex()*2 + getLuk()*0.5 - target.getAgi();
+unsigned int Creature::getAcc(const Creature &target) const {
+  return getDex() * 2 + getLuk() * 0.5 - target.getAgi();
 }
 
-unsigned int Creature::getCri() const{
-  return getLuk()*1.5 + getDex()*0.5;
+unsigned int Creature::getCri() const {
+  return getLuk() * 1.5 + getDex() * 0.5;
 }
 
-void Creature::addBonusFlat(const string& theStatus, unsigned int theValue){
-  if(status.count(theStatus)){
+void Creature::addBonusFlat(const string &theStatus, unsigned int theValue) {
+  if (status.count(theStatus)) {
     status[theStatus].base += theValue;
   }
 }
 
-void Creature::addBonusPercent(const string& theStatus, unsigned int theValue){
-  if(status.count(theStatus)){
+void Creature::addBonusPercent(const string &theStatus, unsigned int theValue) {
+  if (status.count(theStatus)) {
     status[theStatus].base += theValue;
   }
 }
 
-void Creature::heal(unsigned int theHp){
-  setHp(getHp() + theHp);
-}
+void Creature::heal(unsigned int theHp) { setHp(getHp() + theHp); }
 
-void Creature::attack(Creature &target) const {
-  target.takeDamage(getAtk());
+void Creature::attack(Creature &target, unsigned damage) const {
+  target.takeDamage(damage);
 }
 void Creature::takeDamage(int damage) {
   if (damage >= getHp()) {
@@ -94,13 +112,11 @@ void Creature::takeDamage(int damage) {
   }
 }
 
-void Creature::healMp(unsigned int theMp){
-  setMp(getMp() + theMp);
-}
+void Creature::healMp(unsigned int theMp) { setMp(getMp() + theMp); }
 
-void Creature::loseMp(unsigned int theMp){
+void Creature::loseMp(unsigned int theMp) {
   unsigned int currentMp = getMp();
-  setMp((currentMp > theMp) ? currentMp-theMp : 0);
+  setMp((currentMp > theMp) ? currentMp - theMp : 0);
 }
 
 bool Creature::isAlive() { return getHp(); }

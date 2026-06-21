@@ -80,7 +80,7 @@ public:
   virtual void action(vector<Creature *> team, vector<Creature *> monster) {};
 
   virtual void heal(unsigned int theHp);
-  virtual void attack(Creature &target) const;
+  virtual void attack(Creature &target, unsigned damage) const;
   virtual void takeDamage(int damage);
   virtual void healMp(unsigned int theMp);
   virtual void loseMp(unsigned int theMp);

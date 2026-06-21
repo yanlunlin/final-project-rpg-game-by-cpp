@@ -127,6 +127,33 @@ void Player::changeEquipment(size_t index){
     }
 }
 
+PlayerSkill::PlayerSkill(): Skill(){}
+PlayerSkill::PlayerSkill(string theName, int theDamageMultiplier, int theMpCost): Skill(theName, theDamageMultiplier, theMpCost){}
+
+void PlayerSkill::addEffect(Effect* theEffect, Target theTarget){
+    effects.push_back({theEffect, theTarget});
+}
+
+void PlayerSkill::use(vector<Creature*> monsters, Creature* caster, Creature* theTarget) const{
+    for(const auto& instance : effects){
+        if(instance.targetType == Target::All){
+            for(auto* monster : monsters){
+                if(monster && monster->isAlive()){
+                    instance.effectPtr->execute(*monster);
+                    caster->attack(*monster, caster->getAtk() * getDamage());
+                }
+            }
+        }else if(instance.targetType == Target::Single){
+            if(theTarget && theTarget->isAlive()){
+                instance.effectPtr->execute(*theTarget);
+                caster->attack(*theTarget, caster->getAtk() * getDamage());
+            }
+        }
+    }
+}
+
+
+
 Swordman::Swordman(): Player(){}
 Swordman::Swordman(string theName): Player(theName, 160, 30,  8,  16, 2,  12, 6,  10, 6){}
 Swordman::Swordman(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
