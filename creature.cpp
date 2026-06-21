@@ -1,4 +1,5 @@
 #include "creature.h"
+#include"random.h"
 #include <iostream>
 #include <string>
 
@@ -79,12 +80,12 @@ unsigned int Creature::getStatBase(const string &theStatus) const {
   return 0;
 }
 
-unsigned int Creature::getAcc(const Creature &target) const {
-  return getDex() * 2 + getLuk() * 0.5 - target.getAgi();
+double Creature::getAcc(const Creature &target) const {
+  return (getDex() * 2 + getLuk() * 0.5 - target.getAgi())/100.0;
 }
 
-unsigned int Creature::getCri() const {
-  return getLuk() * 1.5 + getDex() * 0.5;
+double Creature::getCri() const {
+  return (getLuk() * 1.5 + getDex() * 0.5)/100.0;
 }
 
 void Creature::addBonusFlat(const string &theStatus, unsigned int theValue) {
@@ -101,8 +102,33 @@ void Creature::addBonusPercent(const string &theStatus, unsigned int theValue) {
 
 void Creature::heal(unsigned int theHp) { setHp(getHp() + theHp); }
 
-void Creature::attack(Creature &target, unsigned damage) const {
-  target.takeDamage(damage);
+void Creature::attack(Creature &target, unsigned int rawDamage) const {
+  unsigned int finalDamage = rawDamage;
+  bool isCrit = Random::getChance(getCri());
+  if(isCrit){
+    finalDamage = static_cast<unsigned int>(finalDamage*2);
+    cout << this->getName() << " 暴擊成功！\n";
+  }
+  unsigned int actualDamage = finalDamage - target.getDef()/2;
+  if(actualDamage <= 0){
+    actualDamage = 0;
+  }
+  cout << this->getName() << " 對 " << target.getName() << " 造成了 " << actualDamage << " 點物理傷害！\n";
+  target.takeDamage(actualDamage);
+}
+void Creature::magicAttack(Creature& target, unsigned int rawMagicDamage) const{
+  unsigned int finalDamage = rawMagicDamage;
+  bool isCrit = Random::getChance(getCri());
+  if(isCrit){
+    finalDamage = static_cast<unsigned int>(finalDamage*2);
+    cout << this->getName() << " 暴擊成功！\n";
+  }
+  int actualDamage = rawMagicDamage - target.getMdef()/2;
+  if(actualDamage <= 0){
+    actualDamage = 0;
+  }
+  cout << this->getName() << " 對 " << target.getName() << " 造成了 " << actualDamage << " 點魔法傷害！\n";
+  target.takeDamage(actualDamage);
 }
 void Creature::takeDamage(int damage) {
   if (damage >= getHp()) {
@@ -120,6 +146,6 @@ void Creature::loseMp(unsigned int theMp) {
 }
 
 bool Creature::isAlive() { return getHp(); }
-void Creature::showInfo() {
+void Creature::showInfo() const{
   cout << getName() << endl << "|-hp: " << getHp() << endl;
 }

@@ -14,7 +14,7 @@ Player::Player(): Creature(), backpack(){}
 Player::Player(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
-): Creature(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk), backpack(5){}
+): Creature(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk), backpack(20){}
 
 const Inventory& Player::getBackpack() const{
     return backpack;
@@ -149,7 +149,16 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
 
     cout << "\n" << this->getName() << " used [" << selectedSkill.getName() << "]!\n";
     
-    selectedSkill.use(monsters, this, selectedTarget);
+    selectedSkill.use(monsters, team, this, selectedTarget);
+}
+
+void Player::showInfo() const{
+    cout << getName() << ":\n";
+    cout << "Hp: " << getHp() << "/" << getMaxHp() << "\n";
+    cout << "Mp: " << getMp() << "/" << getMaxMp() << "\n";
+    cout << "Atk: " << getAtk() << " | " << "Matk: " << getMatk() << "\n";
+    cout << "Def: " << getDef() << " | " << "Mdef: " << getMdef() << "\n";
+    cout << "Agi: " << getAgi() << " | " << "Dex: " << getDex() << " | " << "Luk: " << getLuk() << endl;
 }
 
 void Player::applyGearStats(const Item& gear, bool isEquipping){
@@ -200,23 +209,29 @@ void Player::changeEquipment(size_t index){
 }
 
 PlayerSkill::PlayerSkill(): Skill(){}
-PlayerSkill::PlayerSkill(string theName, Target theTarget, vector<Effect> theEffect, int theDamageMultiplier, int theMpCost):
-    Skill(theName, theDamageMultiplier, theMpCost){}
+PlayerSkill::PlayerSkill(string theName, Target theTarget, DamageType theDmgType, vector<Effect> theEffects, int theDamageMultiplier, int theMpCost
+): Skill(theName, theDamageMultiplier, theMpCost), skillTarget(theTarget), dmgType(theDmgType), effects(theEffects){}
 
 void PlayerSkill::addEffect(const Effect& theEffect, Target theTarget){
     effects.push_back(theEffect);
 }
 
-void PlayerSkill::use(vector<Creature*> monsters, Creature* caster, Creature* theTarget) const{
+void PlayerSkill::use(vector<Creature*> enemies, vector<Creature*> allies, Creature* caster, Creature* theTarget) const{
     vector<Creature*> validTargets;
 
-    if(skillTarget == Target::All){
-        for(auto* monster : monsters){
-            if(monster != nullptr && monster->isAlive()){
-                validTargets.push_back(monster);
+    if(skillTarget == Target::AllEnemies){
+        for(auto* enemy : enemies){
+            if(enemy != nullptr && enemy->isAlive()){
+                validTargets.push_back(enemy);
             }
         }
-    }else{
+    }else if(skillTarget == Target::AllAllies){
+        for (auto* ally : allies) {
+            if(ally != nullptr && ally->isAlive()){
+                validTargets.push_back(ally);
+            }
+        }
+    }else if(skillTarget == Target::SingleEnemy || skillTarget == Target::SingleAlly){
         if(theTarget != nullptr && theTarget->isAlive()){
             validTargets.push_back(theTarget);
         }else{
@@ -227,8 +242,13 @@ void PlayerSkill::use(vector<Creature*> monsters, Creature* caster, Creature* th
     
     for(auto* target : validTargets){
         if(getDamage() > 0){
-            int finalDamage = caster->getAtk() * getDamage();
-            caster->attack(*target, finalDamage);
+            if(dmgType == DamageType::Physical){
+                int finalDamage = caster->getAtk() * getDamage();
+                caster->attack(*target, finalDamage);
+            }else if(dmgType == DamageType::Magical){
+                int finalDamage = caster->getMatk() * getDamage(); 
+                caster->magicAttack(*target, finalDamage);
+            }
         }
         for(const auto& effect : effects){
             effect.execute(*target);
@@ -242,77 +262,155 @@ PlayerSkill& PlayerSkill::attach(const Effect& theEffect, Target theTarget){
 }
 
 Swordman::Swordman(): Player(){}
-Swordman::Swordman(string theName): Player(theName, 160, 30,  8,  16, 2,  12, 6,  10, 6){}
+Swordman::Swordman(string theName): Player(theName, 160, 30,  8,  16, 2,  12, 6,  10, 6){
+    vector<PlayerSkill> jobSkill = {
+        PlayerSkill("破甲重擊", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Physical, 
+        {Effect("破甲", "def", ValueType::Percent, -30, 2)}, 2, 15),
+        PlayerSkill("旋風斬", PlayerSkill::Target::AllEnemies, PlayerSkill::DamageType::Physical, 
+        {Effect("流血", "hp", ValueType::Flat, -20, 3)}, 1, 25)
+    };
+    skillBook.insert(skillBook.end(), jobSkill.begin(), jobSkill.end());
+}
 Swordman::Swordman(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
 ): Player(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk){}
 
 SwordMaster::SwordMaster(): Swordman(){}
-SwordMaster::SwordMaster(string theName): Swordman(theName, 280, 60, 16, 30, 4, 16, 10, 16, 10){}
+SwordMaster::SwordMaster(string theName): Swordman(theName, 280, 60, 16, 30, 4, 16, 10, 16, 10){
+    vector<PlayerSkill> jobSkill = {
+        PlayerSkill("幻影劍舞", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Physical, 
+        {Effect("神速", "agi", ValueType::Percent, 30, 2)}, 4, 25),
+        PlayerSkill("裂地劍氣", PlayerSkill::Target::AllEnemies, PlayerSkill::DamageType::Physical, 
+        {Effect("武器破壞", "atk", ValueType::Percent, -20, 2)}, 2, 30)
+    };
+    skillBook.insert(skillBook.end(), jobSkill.begin(), jobSkill.end());}
 SwordMaster::SwordMaster(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
 ): Swordman(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk){}
 
 Warrior::Warrior(): Player(){}
-Warrior::Warrior(string theName): Player(theName, 200, 20, 6, 12, 2, 18, 4, 8, 5){}
+Warrior::Warrior(string theName): Player(theName, 200, 20, 6, 12, 2, 18, 4, 8, 5){
+    vector<PlayerSkill> jobSkill = {
+        PlayerSkill("無畏戰吼", PlayerSkill::Target::AllAllies, PlayerSkill::DamageType::Physical, 
+        {Effect("防禦提升", "def", ValueType::Percent, 30, 3)}, 0, 15),
+        PlayerSkill("碎骨重擊", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Physical, 
+        {Effect("攻擊下降", "atk", ValueType::Percent, -25, 2)}, 2.5, 20)
+    };
+    skillBook.insert(skillBook.end(), jobSkill.begin(), jobSkill.end());}
 Warrior::Warrior(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
 ): Player(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk){}
 
 Crusader::Crusader(): Warrior(){}
-Crusader::Crusader(string theName): Warrior(theName,350,80,8,18,8,32,18,12,8){}
+Crusader::Crusader(string theName): Warrior(theName, 350, 80, 8, 18, 8, 32, 18, 12, 8){
+    vector<PlayerSkill> jobSkill = {
+        PlayerSkill("聖盾庇護", PlayerSkill::Target::AllAllies, PlayerSkill::DamageType::Physical, 
+        {Effect("魔法護盾", "mdef", ValueType::Percent, 40, 3)}, 0, 25),
+        PlayerSkill("審判盾擊", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Physical, 
+        {Effect("暈眩遲緩", "agi", ValueType::Percent, -50, 1)}, 2, 20)
+    };
+    skillBook.insert(skillBook.end(), jobSkill.begin(), jobSkill.end());}
 Crusader::Crusader(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
 ): Warrior(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk){}
 
 Wizard::Wizard(): Player(){}
-Wizard::Wizard(string theName): Player(theName, 80, 150, 8, 3, 18, 4, 14, 8, 5){}
+Wizard::Wizard(string theName): Player(theName, 80, 150, 8, 3, 18, 4, 14, 8, 5){
+    vector<PlayerSkill> jobSkill = {
+        PlayerSkill("隕石火雨", PlayerSkill::Target::AllEnemies, PlayerSkill::DamageType::Magical, 
+        {Effect("燃燒", "hp", ValueType::Flat, -15, 3)}, 2, 35),
+        PlayerSkill("雷擊術", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Magical, 
+        {Effect("感電", "mdef", ValueType::Percent, -20, 2)}, 3, 20)
+    };
+    skillBook.insert(skillBook.end(), jobSkill.begin(), jobSkill.end());}
 Wizard::Wizard(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
 ): Player(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk){}
 
 ArchWizard::ArchWizard(): Wizard(){}
-ArchWizard::ArchWizard(string theName): Wizard(theName, 140, 300, 12, 5, 35, 6, 24, 12, 8){}
+ArchWizard::ArchWizard(string theName): Wizard(theName, 140, 300, 12, 5, 35, 6, 24, 12, 8){
+    vector<PlayerSkill> jobSkill = {
+        PlayerSkill("絕對零度", PlayerSkill::Target::AllEnemies, PlayerSkill::DamageType::Magical, 
+        {Effect("凍結", "agi", ValueType::Percent, -40, 2)}, 3, 60),
+        PlayerSkill("毀滅黑洞", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Magical, 
+        {Effect("魔防崩塌", "mdef", ValueType::Percent, -50, 3)}, 5, 80)
+    };
+    skillBook.insert(skillBook.end(), jobSkill.begin(), jobSkill.end());}
 ArchWizard::ArchWizard(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
 ): Wizard(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk){}
 
 Priest::Priest(): Player(){}
-Priest::Priest(string theName): Player(theName, 100, 120, 8, 6, 12, 8, 12, 10, 8){}
+Priest::Priest(string theName): Player(theName, 100, 120, 8, 6, 12, 8, 12, 10, 8){
+    vector<PlayerSkill> jobSkill = {
+        PlayerSkill("大治癒術", PlayerSkill::Target::SingleAlly, PlayerSkill::DamageType::Magical, 
+        {Effect("神聖治癒", "hp", ValueType::Percent, 50, 1)}, 0, 20),
+        PlayerSkill("聖光領域", PlayerSkill::Target::AllAllies, PlayerSkill::DamageType::Magical, 
+        {Effect("生命恢復", "hp", ValueType::Flat, 30, 3)}, 0, 35)
+    };
+    skillBook.insert(skillBook.end(), jobSkill.begin(), jobSkill.end());}
 Priest::Priest(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
 ): Player(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk){}
 
 ArchPriest::ArchPriest(): Priest(){}
-ArchPriest::ArchPriest(string theName): Priest(theName, 180, 240, 12, 10, 22, 12, 20, 15, 12){}
+ArchPriest::ArchPriest(string theName): Priest(theName, 180, 240, 12, 10, 22, 12, 20, 15, 12){
+    vector<PlayerSkill> jobSkill = {
+        PlayerSkill("奇蹟之雨", PlayerSkill::Target::AllAllies, PlayerSkill::DamageType::Magical, 
+        {Effect("群體治癒", "hp", ValueType::Percent, 40, 1)}, 0, 60),
+        PlayerSkill("神聖祝福", PlayerSkill::Target::SingleAlly, PlayerSkill::DamageType::Magical, 
+        {Effect("幸運爆發", "luk", ValueType::Percent, 50, 3)}, 0, 40)
+    };
+    skillBook.insert(skillBook.end(), jobSkill.begin(), jobSkill.end());}
 ArchPriest::ArchPriest(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
 ): Priest(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk){}
 
 Archer::Archer(): Player(){}
-Archer::Archer(string theName): Player(theName, 110, 50, 11, 11, 4, 6, 6, 18, 8){}
+Archer::Archer(string theName): Player(theName, 110, 50, 11, 11, 4, 6, 6, 18, 8){
+    vector<PlayerSkill> jobSkill = {
+        PlayerSkill("貫穿箭", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Physical, 
+        {Effect("裝甲貫穿", "def", ValueType::Percent, -20, 2)}, 2, 12),
+        PlayerSkill("劇毒陷阱", PlayerSkill::Target::AllEnemies, PlayerSkill::DamageType::Physical, 
+        {Effect("中毒", "hp", ValueType::Flat, -10, 4)}, 1, 20)
+    };
+    skillBook.insert(skillBook.end(), jobSkill.begin(), jobSkill.end());}
 Archer::Archer(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
 ): Player(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk){}
 
 Thief::Thief(): Player(){}
-Thief::Thief(string theName): Player(theName, 90, 40, 18, 13, 2, 5, 5, 10, 12){}
+Thief::Thief(string theName): Player(theName, 90, 40, 18, 13, 2, 5, 5, 10, 12){
+    vector<PlayerSkill> jobSkill = {
+        PlayerSkill("疾風步", PlayerSkill::Target::SingleAlly, PlayerSkill::DamageType::Physical,
+        {Effect("殘影", "agi", ValueType::Percent, 40, 3)}, 0, 10),
+        PlayerSkill("割喉", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Physical, 
+        {Effect("大出血", "hp", ValueType::Flat, -15, 3)}, 2, 15)
+    };
+    skillBook.insert(skillBook.end(), jobSkill.begin(), jobSkill.end());}
 Thief::Thief(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
 ): Player(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk){}
 
 Assassin::Assassin(): Thief(){}
-Assassin::Assassin(string theName): Thief(theName, 160, 70, 30, 24, 4, 9, 8, 14, 22){}
+Assassin::Assassin(string theName): Thief(theName, 160, 70, 30, 24, 4, 9, 8, 14, 22){
+    vector<PlayerSkill> jobSkill = {
+        PlayerSkill("致命暗殺", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Physical, 
+        {Effect("弱點暴露", "def", ValueType::Percent, -30, 1)}, 4, 30),
+        PlayerSkill("影襲千刃", PlayerSkill::Target::AllEnemies, PlayerSkill::DamageType::Physical, 
+        {Effect("猛毒", "hp", ValueType::Percent, -5, 3)}, 2, 40)
+    };
+    skillBook.insert(skillBook.end(), jobSkill.begin(), jobSkill.end());}
 Assassin::Assassin(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk

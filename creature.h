@@ -71,8 +71,8 @@ public:
 
   unsigned int getStatBase(const string &theStatus) const;
 
-  unsigned int getAcc(const Creature &target) const; // Accuracy 命中率
-  unsigned int getCri() const;                       // Critical 暴擊率
+  double getAcc(const Creature &target) const; // Accuracy 命中率
+  double getCri() const;                       // Critical 暴擊率
 
   void addBonusFlat(const string &theStatus, unsigned int theValue);
   void addBonusPercent(const string &theStatus, unsigned int theValue);
@@ -80,10 +80,11 @@ public:
   virtual void action(vector<Creature *> team, vector<Creature *> monster) {};
 
   virtual void heal(unsigned int theHp);
-  virtual void attack(Creature &target, unsigned damage) const;
+  virtual void attack(Creature &target, unsigned int rawDamage) const;
+  virtual void magicAttack(Creature& target, unsigned int rawMagicDamage) const;
   virtual void takeDamage(int damage);
   virtual void healMp(unsigned int theMp);
   virtual void loseMp(unsigned int theMp);
   bool isAlive();
-  virtual void showInfo();
+  virtual void showInfo() const;
 };

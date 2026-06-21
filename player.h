@@ -16,7 +16,7 @@ class Monster;
 class PlayerSkill;
 
 class Player: public Creature {
-    private:
+    protected:
         /*map<string, unsigned int> status{
             {"hp", 0}, {"mp", 0},
             {"agi", 0}, //agility 敏捷
@@ -30,7 +30,9 @@ class Player: public Creature {
         Item equippedWeapon = Item::CreateEmpty();
         Item equippedArmor  = Item::CreateEmpty();
         vector<Effect> activeEffect;
-        vector<PlayerSkill> skillBook;
+        vector<PlayerSkill> skillBook = {
+            PlayerSkill("普通攻擊", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Magical, {}, 1, 0)
+        };
 
         void applyGearStats(const Item& gear, bool isEquipping);
         void changeEquipment(size_t backpackIndex);
@@ -53,22 +55,29 @@ class Player: public Creature {
         void useItem(size_t index);
 
         void action(vector<Creature*> team, vector<Creature*> monster) override;
+
+        void showInfo() const override;
 };
 
 class PlayerSkill: public Skill{
     public:
         enum class Target{
-            Single, All
+            SingleEnemy, AllEnemies,
+            SingleAlly, AllAllies
+        };
+        enum class DamageType{
+            Physical, Magical
         };
     private:
         Target skillTarget;
+        DamageType dmgType;
         vector<Effect> effects;
     public:
         PlayerSkill();
-        PlayerSkill(string theName, Target theTarget, vector<Effect> theEffect, int theDamageMultiplier, int theMpCost);
+        PlayerSkill(string theName, Target theTarget, DamageType theDmgType, vector<Effect> theEffects, int theDamageMultiplier, int theMpCost);
 
         void addEffect(const Effect& theEffect, Target theTarget);
-        void use(vector<Creature*> monsters, Creature* caster, Creature* theTarget) const;
+        void use(vector<Creature*> enemies, vector<Creature*> allies, Creature* caster, Creature* theTarget) const;
         PlayerSkill& attach(const Effect& theEffect, Target theTarget);
 };
 
