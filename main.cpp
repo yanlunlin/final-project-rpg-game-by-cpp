@@ -172,17 +172,22 @@ int main() {
             "史萊姆",
             slimeSkillBook,
             50,  // HP
-            15,  // MP
             15,  // AGI
-            0,   // ATK
-            15,  // MATK
-            0,   // DEF
-            5    // MDEF
+            15,  // ATK
+            0,   // MATK
+            15,  // DEF
+            0,   // MDEF
+            5    // GOLD
         );
 
     vector<Creature*> monsters;
-    monsters.push_back(slime);
 
+    for(int i = 0; i < 2; i++){
+      Monster* newMonster = nullptr;
+      newMonster = new Monster("史萊姆", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
+      monsters.push_back(newMonster);
+    }
+    
     cout << "戰鬥開始！\n\n";
 
     // =============================

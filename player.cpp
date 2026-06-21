@@ -79,7 +79,7 @@ void Player::useItem(size_t index){
         Item* potionPtr = backpack.usePotion(index);
         if(potionPtr != nullptr){
             this->addActiveEffect(potionPtr->getEffect());
-            cout << name << " 喝下了 【" << potionPtr->getName() << "】！" << endl;
+            cout << name << " 喝下了 [" << potionPtr->getName() << "]！" << endl;
         }
         
         if(backpack.getItem(index).getQuantity() == 0){
@@ -130,6 +130,7 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
     PlayerSkill& selectedSkill = skillBook[skillChoice];
 
     Creature* selectedTarget = nullptr;
+    vector<Creature*>& targetList = (selectedSkill.getTargetType() == PlayerSkill::TargetType::AllEnemies || selectedSkill.getTargetType() == PlayerSkill::TargetType::SingleEnemy) ? monsters : team;
 
     cout << "\nChoose a target:\n";
     if(selectedSkill.getTargetType() == PlayerSkill::TargetType::AllEnemies || selectedSkill.getTargetType() == PlayerSkill::TargetType::SingleEnemy){
@@ -152,16 +153,16 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
         cout << "Enter target number: ";
         cin >> targetChoice;
 
-        if(cin.fail() || targetChoice < 0 || targetChoice >= monsters.size() || monsters[targetChoice] == nullptr || !monsters[targetChoice]->isAlive()){
+        if(cin.fail() || targetChoice < 0 || targetChoice >= targetList.size() || targetList[targetChoice] == nullptr || !targetList[targetChoice]->isAlive()){
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid target. Please choose a living enemy.\n";
+            cout << "Invalid target. Please choose a living target.\n";
         }else{
             break;
         }
     }
 
-    selectedTarget = monsters[targetChoice];
+    selectedTarget = targetList[targetChoice];
 
     cout << "\n" << this->getName() << " 使出了 [" << selectedSkill.getName() << "]!\n";
     
@@ -260,7 +261,7 @@ void PlayerSkill::use(vector<Creature*> enemies, vector<Creature*> allies, Creat
             }
         }
     }else if(skillTarget == TargetType::AllAllies){
-        for (auto* ally : allies) {
+        for(auto* ally : allies){
             if(ally != nullptr && ally->isAlive()){
                 validTargets.push_back(ally);
             }
