@@ -55,6 +55,7 @@ class Player: public Creature {
         void action(vector<Creature*> team, vector<Creature*> monster) override;
 
         void showInfo() const override;
+        void showDetailInfo() const;
 };
 
 class PlayerSkill: public Skill{
