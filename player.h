@@ -59,7 +59,7 @@ class Player: public Creature {
 
 class PlayerSkill: public Skill{
     public:
-        enum class Target{
+        enum class TargetType{
             SingleEnemy, AllEnemies,
             SingleAlly, AllAllies
         };
@@ -67,16 +67,22 @@ class PlayerSkill: public Skill{
             Physical, Magical
         };
     private:
-        Target skillTarget;
+        TargetType skillTarget;
         DamageType dmgType;
         vector<Effect> effects;
     public:
         PlayerSkill();
-        PlayerSkill(string theName, Target theTarget, DamageType theDmgType, vector<Effect> theEffects, int theDamageMultiplier, int theMpCost);
+        PlayerSkill(string theName, TargetType theTgtType, DamageType theDmgType, vector<Effect> theEffects, int theDamageMultiplier, int theMpCost);
 
-        void addEffect(const Effect& theEffect, Target theTarget);
+        TargetType getTargetType() const;
+        DamageType getDamageType() const;
+
+        void setTargetType(TargetType theTgtType);
+        void setDamageType(DamageType theDmgType);
+
+        void addEffect(const Effect& theEffect, TargetType theTgtType);
         void use(vector<Creature*> enemies, vector<Creature*> allies, Creature* caster, Creature* theTarget) const;
-        PlayerSkill& attach(const Effect& theEffect, Target theTarget);
+        PlayerSkill& attach(const Effect& theEffect, TargetType theTarget);
 };
 
 class Swordman: public Player{
