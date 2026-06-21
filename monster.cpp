@@ -9,7 +9,7 @@ Monster::Monster(string name, vector<MonsterSkill *> skillBook, unsigned int hp,
                  unsigned int agi, unsigned int atk, unsigned int matk,
                  unsigned int def, unsigned int mdef, int rewardGold)
     : Creature(name, hp, 0, agi, atk, matk, def, mdef, 0, 0),
-      rewardGold(rewardGold) {}
+      skillBook(skillBook), rewardGold(rewardGold) {}
 
 unsigned int Monster::getRewardGold() const { return rewardGold; }
 void Monster::setRewardGold(unsigned int rewardGold) {
@@ -17,32 +17,41 @@ void Monster::setRewardGold(unsigned int rewardGold) {
 }
 
 MonsterSkill::MonsterSkill() : Skill() {}
-MonsterSkill::MonsterSkill(string theName, int theDamageCross)
-    : Skill(theName, theDamageCross, 0) {}
+MonsterSkill::MonsterSkill(string theName, target tgt, int theDamageCross,
+                           vector<Effect *> eff)
+    : Skill(theName, theDamageCross, 0), skillTarget(tgt) {}
 void MonsterSkill::addEffect(Effect *eff, target tgt) {
-  effects.push_back({eff, tgt});
+  effects.push_back(eff);
 }
 
 void MonsterSkill::use(vector<Creature *> team, Creature *user) const {
-  for (const auto &instance : effects) {
-    if (instance.targetType == target::all) {
-      for (auto *j : team) {
-        if (j && j->isAlive())
-          instance.effectPtr->execute(*j);
-        user->attack(*j, user->getAtk() * getDamage());
+  vector<Creature *> validTargets;
+
+  if (skillTarget == target::all) {
+    for (auto *i : team) {
+      if (i && i->isAlive()) {
+        validTargets.push_back(i);
       }
-    } else {
-      vector<Creature *> alive;
-      for (auto *member : team) {
-        if (member != nullptr && member->isAlive()) {
-          alive.push_back(member);
-        }
+    }
+  } else {
+    vector<Creature *> alive;
+    for (auto *member : team) {
+      if (member != nullptr && member->isAlive()) {
+        alive.push_back(member);
       }
-      if (!alive.empty()) {
-        int to = Random::getInt(0, alive.size() - 1);
-        instance.effectPtr->execute(*alive[to]);
-        user->attack(*alive[to], user->getAtk() * getDamage());
-      }
+    }
+    if (!alive.empty()) {
+      validTargets.push_back(alive[Random::getInt(0, alive.size() - 1)]);
+    }
+  }
+
+  for (auto *i : validTargets) {
+    if (getDamage() > 0) {
+      int finalDamage = user->getAtk() * getDamage();
+      user->attack(*i, finalDamage);
+    }
+    for (const auto &j : effects) {
+      j->execute(*i);
     }
   }
 }
@@ -61,13 +70,12 @@ void Monster::action(vector<Creature *> team, vector<Creature *> monster) {
 
   cout << this->getName() << " using: " << selected_skill->getName() << "!\n";
 
-  selected_skill->use(team);
-  selected_skill->getDamage();
+  selected_skill->use(team, this);
 }
 
 // 讓 addEffect 回傳 *this
 MonsterSkill &MonsterSkill::attach(Effect *eff, target tgt) {
-  effects.push_back({eff, tgt});
+  effects.push_back(eff);
   return *this;
 }
 // Slime::Slime()

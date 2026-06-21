@@ -25,7 +25,6 @@ public:
   void setMpCost(int theMpCost);
 
   virtual void use(std::vector<Creature *> team) const;
-  virtual void use() const;
   void showInfo() const;
 };
 
