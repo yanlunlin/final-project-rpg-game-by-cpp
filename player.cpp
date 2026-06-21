@@ -169,6 +169,12 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
 }
 
 void Player::showInfo() const{
+    cout << getName() << "\t| ";
+    cout << "Hp: " << getHp() << "/" << getMaxHp() << "\t| ";
+    cout << "Mp: " << getMp() << "/" << getMaxMp() << endl;
+}
+
+void Player::showDetailInfo() const{
     cout << getName() << ":\n";
     cout << "Hp: " << getHp() << "/" << getMaxHp() << "\n";
     cout << "Mp: " << getMp() << "/" << getMaxMp() << "\n";

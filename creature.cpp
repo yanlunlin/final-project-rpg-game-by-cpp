@@ -116,10 +116,7 @@ void Creature::attack(Creature &target, unsigned int rawDamage) const {
     finalDamage = static_cast<unsigned int>(finalDamage*2);
     cout << this->getName() << " 暴擊成功！\n";
   }
-  unsigned int actualDamage = finalDamage - target.getDef()/2;
-  if(actualDamage <= 0){
-    actualDamage = 0;
-  }
+  unsigned int actualDamage = (finalDamage > target.getDef()/2) ? finalDamage - target.getDef()/2 : 0;
   cout << this->getName() << " 對 " << target.getName() << " 造成了 " << actualDamage << " 點物理傷害！\n";
   target.takeDamage(actualDamage);
 }
@@ -130,10 +127,7 @@ void Creature::magicAttack(Creature& target, unsigned int rawMagicDamage) const{
     finalDamage = static_cast<unsigned int>(finalDamage*2);
     cout << this->getName() << " 暴擊成功！\n";
   }
-  int actualDamage = finalDamage - target.getMdef()/2;
-  if(actualDamage <= 0){
-    actualDamage = 0;
-  }
+  unsigned int actualDamage = (finalDamage > target.getMdef()/2) ? finalDamage - target.getMdef()/2 : 0;
   cout << this->getName() << " 對 " << target.getName() << " 造成了 " << actualDamage << " 點魔法傷害！\n";
   target.takeDamage(actualDamage);
 }
