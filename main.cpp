@@ -1,3 +1,6 @@
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #include "combat.h"
 #include "effect.h"
 #include "monster.h"
@@ -9,6 +12,9 @@
 using namespace std;
 
 int main() {
+  SetConsoleOutputCP(CP_UTF8); 
+  SetConsoleCP(CP_UTF8);
+
   cout << "Game Start (Press Enter)" << endl;
   cin.get();
   cout << "\033[2J\033[1;1H";
