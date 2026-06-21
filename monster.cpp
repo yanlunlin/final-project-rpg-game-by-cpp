@@ -56,8 +56,13 @@ void MonsterSkill::use(vector<Creature *> team, Creature *user) const {
   }
 }
 void Monster::action(vector<Creature *> team, vector<Creature *> monster) {
-  if (!this->isAlive())
+  if (!this->isAlive()) {
     return;
+  }
+
+  cout << "\n====================================\n";
+  cout << "It's " << this->getName() << "'s turn!\n";
+  cout << "====================================\n";
 
   if (skillBook.empty()) {
     cout << this->getName() << "Do nothing\n";
@@ -68,7 +73,7 @@ void Monster::action(vector<Creature *> team, vector<Creature *> monster) {
 
   MonsterSkill *selected_skill = skillBook[random_idx];
 
-  cout << this->getName() << " using: " << selected_skill->getName() << "!\n";
+  cout << this->getName() << "使用了" << selected_skill->getName() << "!\n";
 
   selected_skill->use(team, this);
 }
@@ -78,18 +83,3 @@ MonsterSkill &MonsterSkill::attach(Effect *eff, target tgt) {
   effects.push_back(eff);
   return *this;
 }
-// Slime::Slime()
-//     : Monster("Slime",
-//               {
-//                   Skill("撞擊", 30, 0),
-//                   Skill(),
-//                   Skill(),
-//                   Skill(),
-//               },
-//               0, 0, 0, 0, 0, 0, 0, 0, 0, 0) {}
-// Slime::Slime(string name, unsigned int hp, unsigned int mp, unsigned int agi,
-//              unsigned int atk, unsigned int matk, unsigned int def,
-//              unsigned int mdef, unsigned int dex, unsigned int luk,
-//              int rewardGold)
-//     : Monster(name + " Slime", hp, mp, agi, atk, matk, def, mdef, dex, luk,
-//               rewardGold) {}
