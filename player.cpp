@@ -14,7 +14,11 @@ Player::Player(): Creature(), backpack(){}
 Player::Player(string theName, unsigned int theHp, unsigned int theMp, unsigned int theAgi,
     unsigned int theAtk, unsigned int theMatk, unsigned int theDef, unsigned int theMdef,
     unsigned int theDex, unsigned int theLuk
-): Creature(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk), backpack(20){}
+): Creature(theName, theHp, theMp, theAgi, theAtk, theMatk, theDef, theMdef, theDex, theLuk), backpack(20){
+    skillBook = {
+        PlayerSkill("普通攻擊", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Magical, {}, 1, 0)
+    };
+}
 
 const Inventory& Player::getBackpack() const{
     return backpack;

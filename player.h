@@ -30,9 +30,7 @@ class Player: public Creature {
         Item equippedWeapon = Item::CreateEmpty();
         Item equippedArmor  = Item::CreateEmpty();
         vector<Effect> activeEffect;
-        vector<PlayerSkill> skillBook = {
-            PlayerSkill("普通攻擊", PlayerSkill::Target::SingleEnemy, PlayerSkill::DamageType::Magical, {}, 1, 0)
-        };
+        vector<PlayerSkill> skillBook;
 
         void applyGearStats(const Item& gear, bool isEquipping);
         void changeEquipment(size_t backpackIndex);
