@@ -5,6 +5,7 @@
 ---
 
 ## 專案介紹
+https://docs.google.com/document/d/1uBM-ERy5Jqji1MrSwWR5-dxN4Ajoz_Mf4-bdbfLPebI/edit?tab=t.0
 
 本專案為 **計算機程式設計實習（二）期末專案**。
 
@@ -172,6 +173,8 @@ Project
 - Object-Oriented Programming (OOP)
 - Class
 - Vector
+- map
+- structure
 - String
 - Function
 - Git
