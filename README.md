@@ -195,37 +195,6 @@ g++ main.cpp -o RPG
 
 ---
 
-## 專案畫面
-
-可將遊戲截圖放入 `images` 資料夾。
-
-```text
-images/
-├── start.png
-├── recruit.png
-├── battle.png
-├── boss.png
-└── victory.png
-```
-
-README 顯示方式：
-
-```md
-## Screenshot
-
-![Start](images/start.png)
-
-![Recruit](images/recruit.png)
-
-![Battle](images/battle.png)
-
-![Boss](images/boss.png)
-
-![Victory](images/victory.png)
-```
-
----
-
 ## 未來可擴充功能
 
 - 經驗值（EXP）系統
