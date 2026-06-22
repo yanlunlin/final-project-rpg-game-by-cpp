@@ -56,43 +56,41 @@ void MonsterSkill::use(vector<Creature *> team, Creature *user) const {
       user->attack(*i, finalDamage);
     }
     for (const auto &j : effects) {
-      j->execute(*i);
+      i->addActiveEffect(*j);
     }
   }
 }
 
 void Monster::addActiveEffect(const Effect& theEffect){
-    for(size_t i = 0; i < activeEffect.size(); ++i){
-        if(activeEffect[i].getName() == theEffect.getName()){
-            
-            unsigned int maxTurns = std::max(activeEffect[i].getRemainingTurns(), theEffect.getRemainingTurns());
-            activeEffect[i].setRemainingTurns(maxTurns);
+  for(size_t i = 0; i < activeEffect.size(); ++i){
+    if(activeEffect[i].getName() == theEffect.getName()){
+      
+      unsigned int maxTurns = std::max(activeEffect[i].getRemainingTurns(), theEffect.getRemainingTurns());
+      activeEffect[i].setRemainingTurns(maxTurns);
 
-            return;
-        }
+      return;
     }
+  }
 
-    theEffect.execute(*this);
-
-    activeEffect.push_back(theEffect);
+  activeEffect.push_back(theEffect);
 }
 
 void Monster::updateEffects(){
-    for(auto it = activeEffect.begin(); it != activeEffect.end(); ){
-        
-        it->execute(*this);
+  for(auto it = activeEffect.begin(); it != activeEffect.end(); ){
+    
+    it->execute(*this);
 
-        unsigned int currentTurns = it->getRemainingTurns();
-        if(currentTurns > 0){
-            it->setRemainingTurns(currentTurns - 1);
-        }
-
-        if(it->getRemainingTurns() == 0){
-            it = activeEffect.erase(it);
-        }else{
-            ++it;
-        }
+    unsigned int currentTurns = it->getRemainingTurns();
+    if(currentTurns > 0){
+      it->setRemainingTurns(currentTurns - 1);
     }
+
+    if(it->getRemainingTurns() == 0){
+      it = activeEffect.erase(it);
+    }else{
+      ++it;
+    }
+  }
 }
 
 void Monster::action(vector<Creature *> team, vector<Creature *> monster) {

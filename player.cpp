@@ -39,8 +39,6 @@ void Player::addActiveEffect(const Effect& theEffect){
         }
     }
 
-    theEffect.execute(*this);
-
     activeEffect.push_back(theEffect);
 }
 
@@ -103,7 +101,7 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
 
     cout << "\n====================================\n";
     cout << "輪到" << this->getName() << "行動!\n";
-    cout << "====================================";
+    cout << "====================================\n";
 
     updateEffects();
 
@@ -341,7 +339,6 @@ void PlayerSkill::use(vector<Creature*> enemies, vector<Creature*> allies, Creat
             }
         }
         for(const auto& effect : effects){
-            effect.execute(*target);
             target->addActiveEffect(effect);
         }
     }
