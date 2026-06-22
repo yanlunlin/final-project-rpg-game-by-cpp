@@ -242,6 +242,7 @@ README 顯示方式：
 ## 專案成員
 
 | 成員 | 負責內容 |
+|------|----------|
 | 吳佳晟 | Player Class |
 | 張榮豐 | Skill Class |
 | 林彥侖 | Monster Class |
