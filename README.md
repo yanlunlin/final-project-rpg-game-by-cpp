@@ -1,4 +1,4 @@
-# Midgard Defense RPG (C++)
+# 米德加爾特保衛戰 RPG (C++)
 
 一款使用 **C++** 製作的文字版 RPG 遊戲，採用 **CLI（Command Line Interface）** 操作。玩家可以招募不同職業角色組成隊伍，利用普通攻擊、技能及道具擊敗怪物，體驗回合制戰鬥的樂趣。
 
