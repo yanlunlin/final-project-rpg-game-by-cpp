@@ -116,10 +116,97 @@ int main() {
   // 戰鬥系統
   combat(team, monsters);
 
+  cout << "\n\n=====================================\n";
+  cout << "            第二關\n";
+  cout << "         史萊姆巢穴深處\n";
+  cout << "=====================================\n\n";
+
+  cout << "就在你們擊敗普通史萊姆後...\n";
+  cout << "整個地面開始劇烈震動！\n";
+  cout << "大量史萊姆融合成一個巨大的身影！\n\n";
+
+  cout << "【魔王】巨大史萊姆 King Slime 出現了！\n\n";
+
+  cout << "按 Enter 開始最終決戰...";
+  cin.ignore(numeric_limits<streamsize>::max(), '\n');
+  cin.get();
+
+  cout << "\033[2J\033[1;1H";
+
+  vector<MonsterSkill*> bossSkillBook =
+{
+    new MonsterSkill(
+        "泰山壓頂",
+        MonsterSkill::target::player,
+        1,
+        {
+            new Effect()
+        }
+    ),
+
+    new MonsterSkill(
+        "黏液束縛",
+        MonsterSkill::target::player,
+        0,
+        {
+            new Effect(
+                "重度緩速",
+                "agi",
+                ValueType::Flat,
+                -15,
+                5
+            )
+        }
+    ),
+
+    new MonsterSkill(
+        "王者怒吼",
+        MonsterSkill::target::player,
+        0,
+        {
+            new Effect(
+                "恐懼",
+                "atk",
+                ValueType::Percent,
+                -30,
+                3
+            )
+        }
+    )
+};
+
+Monster* kingSlime =
+    new Monster(
+        "巨大史萊姆王",
+        bossSkillBook,
+        500,    // HP
+        100,    // MP
+        25,     // AGI
+        40,     // ATK
+        30,     // MATK
+        20,     // DEF
+        20      // MDEF
+    );
+  vector<Creature*> bossStage;
+
+  bossStage.push_back(kingSlime);
+
+  cout << "\n最終戰開始！\n\n";
+
+  combat(team, bossStage);
+
   // 戰鬥結束
   cout << "\n=====================================\n";
   cout << "           戰鬥結束\n";
   cout << "=====================================\n";
+
+  cout << "\n=====================================\n";
+  cout << "          恭喜破關！\n";
+  cout << "=====================================\n";
+
+  cout << "巨大史萊姆王被擊敗了！\n";
+  cout << "米德加爾特再次恢復和平。\n";
+  cout << "你與夥伴成為了傳說中的英雄！\n";
 
   cout << "\n感謝遊玩！\n";
 
