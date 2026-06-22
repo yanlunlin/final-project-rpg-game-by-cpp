@@ -173,7 +173,7 @@ Project
 - Class
 - Vector
 - map
-- sturcture
+- structure
 - String
 - Function
 - Git
