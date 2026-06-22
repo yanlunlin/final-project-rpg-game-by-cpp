@@ -2,7 +2,6 @@
 #define EFFECT_H
 
 #include<string>
-#include"creature.h"
 
 using std::string;
 
@@ -10,6 +9,8 @@ enum class ValueType {
   Flat,   // 固定值
   Percent // 百分比
 };
+
+class Creature;
 
 class Effect {
 protected:

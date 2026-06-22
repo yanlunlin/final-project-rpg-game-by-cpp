@@ -80,8 +80,8 @@ void Player::useItem(size_t index){
     if(itemType == "Potion"){
         Item* potionPtr = backpack.usePotion(index);
         if(potionPtr != nullptr){
-            this->addActiveEffect(potionPtr->getEffect());
             cout << name << " 喝下了 [" << potionPtr->getName() << "]！" << endl;
+            this->addActiveEffect(potionPtr->getEffect());
         }
         
         if(backpack.getItem(index).getQuantity() == 0){
@@ -97,23 +97,24 @@ void Player::addItem(const Item& theItem){
 }
 
 void Player::action(vector<Creature*> team, vector<Creature*> monsters){
-    updateEffects();
-
     if(!this->isAlive()){
         return;
     }
 
     cout << "\n====================================\n";
     cout << "輪到" << this->getName() << "行動!\n";
-    cout << "====================================\n";
+    cout << "====================================";
+
+    updateEffects();
 
     int actionChoice = -1;
 
     do{
         while(true){
-            cout << "請輸入行動編號:\n";
+            cout << "\n請選擇行動:\n";
             cout << "[0] 使用道具\n";
             cout << "[1] 使用技能\n";
+            cout << "輸入行動編號: ";
             cin >> actionChoice;
 
             if(cin.fail() || actionChoice < 0 || actionChoice > 1){
@@ -130,9 +131,9 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
             if(itemList.empty()){
                 cout << "這裡空空如也\n";
             }else{
-                cout << "選擇並使用道具:\n";
+                cout << "\n選擇使用道具:\n";
                 for(size_t i = 0; i < itemList.size(); i++){
-                    cout << "[" << i << "] " << itemList[i].getName() << endl;
+                    cout << "[" << i << "] " << itemList[i].getName() << "(*" << itemList[i].getQuantity() << ")" << endl;
                 }
 
                 int itemChoice = -1;
@@ -160,7 +161,7 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
         return;
     }
 
-    cout << "選擇並使用技能:\n";
+    cout << "\n選擇並使用技能:\n";
     for(size_t i = 0; i < skillBook.size(); ++i){
         cout << "[" << i << "] ";
         skillBook[i].showInfo();
@@ -169,7 +170,7 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
     int skillChoice = -1;
 
     while(true){
-        cout << "輸入技能編號: ";
+        cout << "請輸入技能編號: ";
         cin >> skillChoice;
 
         if(cin.fail() || skillChoice < 0 || skillChoice >= skillBook.size()){
@@ -341,6 +342,7 @@ void PlayerSkill::use(vector<Creature*> enemies, vector<Creature*> allies, Creat
         }
         for(const auto& effect : effects){
             effect.execute(*target);
+            target->addActiveEffect(effect);
         }
     }
 }

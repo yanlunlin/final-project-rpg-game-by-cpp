@@ -24,6 +24,7 @@ MonsterSkill::MonsterSkill() : Skill() {}
 MonsterSkill::MonsterSkill(string theName, target tgt, int theDamageCross,
                            vector<Effect *> eff)
     : Skill(theName, theDamageCross, 0), skillTarget(tgt) {}
+
 void MonsterSkill::addEffect(Effect *eff, target tgt) {
   effects.push_back(eff);
 }
@@ -59,6 +60,41 @@ void MonsterSkill::use(vector<Creature *> team, Creature *user) const {
     }
   }
 }
+
+void Monster::addActiveEffect(const Effect& theEffect){
+    for(size_t i = 0; i < activeEffect.size(); ++i){
+        if(activeEffect[i].getName() == theEffect.getName()){
+            
+            unsigned int maxTurns = std::max(activeEffect[i].getRemainingTurns(), theEffect.getRemainingTurns());
+            activeEffect[i].setRemainingTurns(maxTurns);
+
+            return;
+        }
+    }
+
+    theEffect.execute(*this);
+
+    activeEffect.push_back(theEffect);
+}
+
+void Monster::updateEffects(){
+    for(auto it = activeEffect.begin(); it != activeEffect.end(); ){
+        
+        it->execute(*this);
+
+        unsigned int currentTurns = it->getRemainingTurns();
+        if(currentTurns > 0){
+            it->setRemainingTurns(currentTurns - 1);
+        }
+
+        if(it->getRemainingTurns() == 0){
+            it = activeEffect.erase(it);
+        }else{
+            ++it;
+        }
+    }
+}
+
 void Monster::action(vector<Creature *> team, vector<Creature *> monster) {
   if (!this->isAlive()) {
     return;
@@ -67,6 +103,8 @@ void Monster::action(vector<Creature *> team, vector<Creature *> monster) {
   cout << "\n====================================\n";
   cout << "迎接" << this->getName() << "的攻擊!\n";
   cout << "====================================\n";
+
+  updateEffects();
 
   if (skillBook.empty()) {
     cout << this->getName() << "Do nothing\n";

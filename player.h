@@ -45,7 +45,7 @@ class Player: public Creature {
         const Inventory &getBackpack() const;
         const vector<Item> &getItemList() const;
 
-        void addActiveEffect(const Effect& theEffect);
+        void addActiveEffect(const Effect& theEffect) override;
         void updateEffects();
 
         /*void attack(Monster& target);

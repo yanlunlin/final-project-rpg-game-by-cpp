@@ -91,7 +91,7 @@ void Effect::execute(Creature& target) const{
             }
         }
 
-        cout << "[" << this->getName() << "] 發動 (" << statusTag << ": " << oldValue << "->" << target.getStatTotal(statusTag) << ")\n";
+        cout << target.getName() << " [" << this->getName() << "] 發動 (" << statusTag << ": " << oldValue << "->" << target.getStatTotal(statusTag) << ")\n";
 
         //remainingTurns--;
     }

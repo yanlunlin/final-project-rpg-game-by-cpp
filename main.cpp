@@ -76,7 +76,7 @@ int main() {
     }
     team.push_back(newMember);
 
-    Potion redPotion("回血藥水", "hp", ValueType::Flat, 10, 1, 1);
+    Potion redPotion("回血藥水", "hp", ValueType::Flat, 10, 0, 2);
     newMember->addItem(redPotion);
 
     cout << "成功招募！\n\n";
@@ -91,15 +91,16 @@ int main() {
   cout << "          新手森林\n";
   cout << "=====================================\n\n";
 
-  cout << "隊伍進入森林後，發現一隻奇怪的魔物。\n";
+  cout << "隊伍進入森林後，發現一些奇怪的魔物。\n";
   cout << "牠看起來黏黏的，而且充滿敵意。\n\n";
 
   cout << "史萊姆出現了！\n\n";
 
   // 怪物技能
-  vector<MonsterSkill *> slimeSkillBook =
-    {new MonsterSkill("撞擊", MonsterSkill::target::player, 1, {new Effect(),}),
-    new MonsterSkill("緩速", MonsterSkill::target::player, 0, {new Effect("緩速", "agi", ValueType::Flat, -5, 3),})};
+  vector<MonsterSkill *> slimeSkillBook = {
+    new MonsterSkill("撞擊", MonsterSkill::target::player, 1, {}),
+    new MonsterSkill("緩速", MonsterSkill::target::player, 0, {new Effect("緩速", "agi", ValueType::Flat, -5, 3),})
+  };
 
   // 建立怪物
   Monster *slime = new Monster("史萊姆", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
@@ -128,65 +129,20 @@ int main() {
   cout << "【魔王】巨大史萊姆 King Slime 出現了！\n\n";
 
   cout << "按 Enter 開始最終決戰...";
-  cin.ignore(numeric_limits<streamsize>::max(), '\n');
+  cin.clear();
   cin.get();
 
   cout << "\033[2J\033[1;1H";
 
-  vector<MonsterSkill*> bossSkillBook =
-{
-    new MonsterSkill(
-        "泰山壓頂",
-        MonsterSkill::target::player,
-        1,
-        {
-            new Effect()
-        }
-    ),
+  vector<MonsterSkill*> bossSkillBook = {
+    new MonsterSkill("泰山壓頂", MonsterSkill::target::player, 1, {}),
+    new MonsterSkill("黏液束縛", MonsterSkill::target::player, 0,
+      {new Effect("重度緩速", "agi", ValueType::Flat, -15, 5)}),
+    new MonsterSkill("王者怒吼", MonsterSkill::target::player, 0,
+      {new Effect("恐懼", "atk", ValueType::Percent, -30, 3)})
+  };
 
-    new MonsterSkill(
-        "黏液束縛",
-        MonsterSkill::target::player,
-        0,
-        {
-            new Effect(
-                "重度緩速",
-                "agi",
-                ValueType::Flat,
-                -15,
-                5
-            )
-        }
-    ),
-
-    new MonsterSkill(
-        "王者怒吼",
-        MonsterSkill::target::player,
-        0,
-        {
-            new Effect(
-                "恐懼",
-                "atk",
-                ValueType::Percent,
-                -30,
-                3
-            )
-        }
-    )
-};
-
-Monster* kingSlime =
-    new Monster(
-        "巨大史萊姆王",
-        bossSkillBook,
-        500,    // HP
-        100,    // MP
-        25,     // AGI
-        40,     // ATK
-        30,     // MATK
-        20,     // DEF
-        20      // MDEF
-    );
+  Monster* kingSlime = new Monster("巨大史萊姆王", bossSkillBook, 500, 25, 40, 30, 20, 20, 100);
   vector<Creature*> bossStage;
 
   bossStage.push_back(kingSlime);
@@ -194,11 +150,6 @@ Monster* kingSlime =
   cout << "\n最終戰開始！\n\n";
 
   combat(team, bossStage);
-
-  // 戰鬥結束
-  cout << "\n=====================================\n";
-  cout << "           戰鬥結束\n";
-  cout << "=====================================\n";
 
   cout << "\n=====================================\n";
   cout << "          恭喜破關！\n";

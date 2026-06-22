@@ -42,6 +42,7 @@ void combat(vector<Creature *> &team, vector<Creature *> &monster) {
     for (auto i : team) {
       cout << i->getName() << " Hp: " << i->getHp() << endl;
     }
+    cout << "\n";
     for (auto i : monster) {
       cout << i->getName() << " Hp: " << i->getHp() << endl;
     }
@@ -66,9 +67,9 @@ void combat(vector<Creature *> &team, vector<Creature *> &monster) {
     cout << "\033[2J\033[1;1H";
 
     for (auto i : monster) {
+      unsigned int oldWaller = Player::wallet;
       Player::wallet += static_cast<Monster *>(i)->getRewardGold();
-      cout << "你獲得了金幣!!!" << endl
-           << "你有" << Player::wallet << "個金幣!";
+      cout << "你獲得了金幣!!!" << "(" << oldWaller << "->" << Player::wallet << ")" << endl;
     }
   } else {
     cout << "GAME OVER!!!";

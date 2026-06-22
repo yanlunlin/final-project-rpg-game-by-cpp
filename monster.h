@@ -15,6 +15,7 @@ class MonsterSkill;
 class Monster : public Creature {
 protected:
   unsigned int rewardGold;
+  vector<Effect> activeEffect;
   vector<MonsterSkill *> skillBook;
 
 public:
@@ -27,6 +28,8 @@ public:
   void setRewardGold(unsigned int rewardGold);
   void showInfo() const;
 
+  void addActiveEffect(const Effect& theEffect) override;
+  void updateEffects();
   void action(vector<Creature *> team, vector<Creature *> monster) override;
 };
 
@@ -42,7 +45,6 @@ public:
   MonsterSkill();
   MonsterSkill(string theName, target tgt, int theDamageCross,
                vector<Effect *> eff);
-
   void addEffect(Effect *eff, target tgt);
   void use(vector<Creature *> team, Creature *user) const;
   MonsterSkill &attach(Effect *eff, target tgt);
