@@ -51,6 +51,7 @@ class Player: public Creature {
         /*void attack(Monster& target);
         void takeDamage(const Monster& attacker, int damage);*/
         void useItem(size_t index);
+        void addItem(const Item& theItem);
 
         void action(vector<Creature*> team, vector<Creature*> monster) override;
 

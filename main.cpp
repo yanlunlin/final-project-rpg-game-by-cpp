@@ -4,6 +4,8 @@
 #include "monster.h"
 #include "player.h"
 #include "skill.h"
+#include "item.h"
+#include "potion.h"
 #include <windows.h>
 #include <iostream>
 #include <limits>
@@ -73,6 +75,10 @@ int main() {
         case 5:newMember = new Thief("盜賊"); break;
     }
     team.push_back(newMember);
+
+    Potion redPotion("回血藥水", "hp", ValueType::Flat, 10, 1, 1);
+    newMember->addItem(redPotion);
+
     cout << "成功招募！\n\n";
   }
 

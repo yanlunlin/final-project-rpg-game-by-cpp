@@ -39,6 +39,8 @@ void Player::addActiveEffect(const Effect& theEffect){
         }
     }
 
+    theEffect.execute(*this);
+
     activeEffect.push_back(theEffect);
 }
 
@@ -90,6 +92,10 @@ void Player::useItem(size_t index){
     }
 }
 
+void Player::addItem(const Item& theItem){
+    backpack.addItem(theItem);
+}
+
 void Player::action(vector<Creature*> team, vector<Creature*> monsters){
     updateEffects();
 
@@ -98,11 +104,59 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
     }
 
     cout << "\n====================================\n";
-    cout << "輪到" << this->getName() << "攻擊!\n";
+    cout << "輪到" << this->getName() << "行動!\n";
     cout << "====================================\n";
 
+    int actionChoice = -1;
+
+    do{
+        while(true){
+            cout << "請輸入行動編號:\n";
+            cout << "[0] 使用道具\n";
+            cout << "[1] 使用技能\n";
+            cin >> actionChoice;
+
+            if(cin.fail() || actionChoice < 0 || actionChoice > 1){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "輸入錯誤, 請再次嘗試\n";
+            }else{
+                break;
+            }
+        }
+        
+        if(actionChoice == 0){
+            vector<Item> itemList = this->getItemList();
+            if(itemList.empty()){
+                cout << "這裡空空如也\n";
+            }else{
+                cout << "選擇並使用道具:\n";
+                for(size_t i = 0; i < itemList.size(); i++){
+                    cout << "[" << i << "] " << itemList[i].getName() << endl;
+                }
+
+                int itemChoice = -1;
+
+                while(true){
+                    cout << "輸入道具編號: ";
+                    cin >> itemChoice;
+
+                    if(cin.fail() || itemChoice < 0 || itemChoice >= itemList.size()){
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "輸入錯誤, 請再次嘗試\n";
+                    }else{
+                        break;
+                    }
+                }
+
+                useItem(itemChoice);
+            }
+        }
+    }while(actionChoice == 0);
+    
     if(skillBook.empty()){
-        cout << this->getName() << "不會任何skill, 他只能等...\n";
+        cout << this->getName() << "不會任何技能, 只能發呆...\n";
         return;
     }
 
@@ -115,7 +169,7 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
     int skillChoice = -1;
 
     while(true){
-        cout << "輸入skill號碼: ";
+        cout << "輸入技能編號: ";
         cin >> skillChoice;
 
         if(cin.fail() || skillChoice < 0 || skillChoice >= skillBook.size()){
@@ -132,7 +186,7 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
     Creature* selectedTarget = nullptr;
     vector<Creature*>& targetList = (selectedSkill.getTargetType() == PlayerSkill::TargetType::AllEnemies || selectedSkill.getTargetType() == PlayerSkill::TargetType::SingleEnemy) ? monsters : team;
 
-    cout << "\n選擇攻擊對象:\n";
+    cout << "\n選擇使用對象:\n";
     if(selectedSkill.getTargetType() == PlayerSkill::TargetType::AllEnemies || selectedSkill.getTargetType() == PlayerSkill::TargetType::SingleEnemy){
         for(size_t i = 0; i < monsters.size(); ++i){
             if(monsters[i] != nullptr && monsters[i]->isAlive()){
@@ -150,7 +204,7 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
 
     int targetChoice = -1;
     while(true){
-        cout << "輸入攻擊對象號碼: ";
+        cout << "輸入使用對象編號: ";
         cin >> targetChoice;
 
         if(cin.fail() || targetChoice < 0 || targetChoice >= targetList.size() || targetList[targetChoice] == nullptr || !targetList[targetChoice]->isAlive()){
