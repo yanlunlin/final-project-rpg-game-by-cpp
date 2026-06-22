@@ -172,6 +172,8 @@ Project
 - Object-Oriented Programming (OOP)
 - Class
 - Vector
+- map
+- sturcture
 - String
 - Function
 - Git
