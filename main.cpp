@@ -6,6 +6,7 @@
 #include "skill.h"
 #include "item.h"
 #include "potion.h"
+#include "random.h"
 #include <windows.h>
 #include <iostream>
 #include <string>
@@ -111,6 +112,14 @@ int main() {
     Monster *newMonster = nullptr;
     newMonster = new Monster("史萊姆"+str+"號", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
     monsters.push_back(newMonster);
+  }
+
+  if(Random::getInt(0, 9999) == 6767){
+    vector<MonsterSkill *> Surprising_Skill = {new MonsterSkill("SIXSEVEN", MonsterSkill::target::all, 1, {})};
+    Monster* Surprising_Monster = new Monster("67大魔王", Surprising_Skill, 6767, 6767, 6767, 6767, 6767, 6767, 6767);
+    monsters.push_back(Surprising_Monster);
+    cout << "你遇到彩蛋怪了\n";
+    cout << "野生的67大魔王出現了，祝你好運!\n\n";
   }
 
   cout << "戰鬥開始！\n\n";
