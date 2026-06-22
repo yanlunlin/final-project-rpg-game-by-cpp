@@ -85,7 +85,7 @@ public:
   virtual void heal(unsigned int theHp);
   virtual void attack(Creature &target, unsigned int rawDamage) const;
   virtual void magicAttack(Creature& target, unsigned int rawMagicDamage) const;
-  virtual void takeDamage(int damage);
+  virtual void takeDamage(unsigned int damage);
   virtual void healMp(unsigned int theMp);
   virtual void loseMp(unsigned int theMp);
   bool isAlive();

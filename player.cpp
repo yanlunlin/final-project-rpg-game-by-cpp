@@ -217,7 +217,7 @@ void Player::action(vector<Creature*> team, vector<Creature*> monsters){
 
     selectedTarget = targetList[targetChoice];
 
-    cout << "\n" << this->getName() << " 使出了 [" << selectedSkill.getName() << "]!\n";
+    cout << "\n" << this->getName() << " 對 " << selectedTarget->getName() << " 使出了 [" << selectedSkill.getName() << "]!\n";
     
     selectedSkill.use(monsters, team, this, selectedTarget);
 }

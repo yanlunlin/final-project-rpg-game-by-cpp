@@ -117,7 +117,7 @@ void Creature::attack(Creature &target, unsigned int rawDamage) const {
     cout << this->getName() << " 暴擊成功！\n";
   }
   unsigned int actualDamage = (finalDamage > target.getDef()/2) ? finalDamage - target.getDef()/2 : 0;
-  cout << this->getName() << " 對 " << target.getName() << " 造成了 " << actualDamage << " 點物理傷害！\n";
+  cout << this->getName() << " 對 " << target.getName() << " 造成了 " << actualDamage << " 點物理傷害！";
   target.takeDamage(actualDamage);
 }
 void Creature::magicAttack(Creature& target, unsigned int rawMagicDamage) const{
@@ -128,15 +128,14 @@ void Creature::magicAttack(Creature& target, unsigned int rawMagicDamage) const{
     cout << this->getName() << " 暴擊成功！\n";
   }
   unsigned int actualDamage = (finalDamage > target.getMdef()/2) ? finalDamage - target.getMdef()/2 : 0;
-  cout << this->getName() << " 對 " << target.getName() << " 造成了 " << actualDamage << " 點魔法傷害！\n";
+  cout << this->getName() << " 對 " << target.getName() << " 造成了 " << actualDamage << " 點魔法傷害！";
   target.takeDamage(actualDamage);
 }
-void Creature::takeDamage(int damage) {
-  if (damage >= getHp()) {
-    setHp(0);
-  } else {
-    setHp(getHp() - damage);
-  }
+void Creature::takeDamage(unsigned int damage) {
+  unsigned int oldHp = getHp();
+  unsigned int newHp = (oldHp > damage) ? oldHp-damage : 0;
+  setHp(newHp);
+  cout << "(" << oldHp << "->" << newHp << ")\n";
 }
 
 void Creature::healMp(unsigned int theMp) { setMp(getMp() + theMp); }

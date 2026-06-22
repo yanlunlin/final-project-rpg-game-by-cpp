@@ -113,7 +113,7 @@ void Monster::action(vector<Creature *> team, vector<Creature *> monster) {
 
   MonsterSkill *selected_skill = skillBook[random_idx];
 
-  cout << this->getName() << "使用了" << selected_skill->getName() << "!\n";
+  cout << this->getName() << "使用了 [" << selected_skill->getName() << "]!\n";
 
   selected_skill->use(team, this);
 }

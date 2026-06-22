@@ -8,6 +8,7 @@
 #include "potion.h"
 #include <windows.h>
 #include <iostream>
+#include <string>
 #include <limits>
 #include <vector>
 using namespace std;
@@ -103,12 +104,12 @@ int main() {
   };
 
   // 建立怪物
-  Monster *slime = new Monster("史萊姆", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
   vector<Creature *> monsters;
   for (int i = 0; i < 2; i++)
   {
+    string str = to_string(i+1);
     Monster *newMonster = nullptr;
-    newMonster = new Monster("史萊姆", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
+    newMonster = new Monster("史萊姆"+str+"號", slimeSkillBook, 50, 15, 15, 0, 15, 0, 5);
     monsters.push_back(newMonster);
   }
 
